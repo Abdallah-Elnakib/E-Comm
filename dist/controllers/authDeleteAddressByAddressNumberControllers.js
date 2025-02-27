@@ -21,11 +21,17 @@ const deleteAddressById = (req, res) => __awaiter(void 0, void 0, void 0, functi
             return;
         }
         if (!addressNumber) {
-            res.status(400).json({ message: "Address Numeber is required" });
+            res.status(400).json({ message: "Address Number is required" });
             return;
         }
-        if (addressNumber !== 'address1' && addressNumber !== 'address2' && addressNumber !== 'address3') {
+        const addressInUser = Object.keys(user.toObject().address);
+        console.log(addressInUser);
+        if (!addressInUser.includes(addressNumber)) {
             res.status(401).json({ message: "Invalid Address Number" });
+            return;
+        }
+        if (addressInUser.length < 3) {
+            res.status(401).json({ message: "The address cannot be deleted before adding another address." });
             return;
         }
         user.address[addressNumber] = undefined;

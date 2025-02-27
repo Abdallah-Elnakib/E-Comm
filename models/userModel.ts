@@ -20,19 +20,14 @@ interface IUser extends Document {
 const addressSchema: Schema = new mongoose.Schema({
     address1: {street: {
         type: String,
-        required: true
     },
     city: {
         type: String,
-        required: true
     },
     state: {
-        type: String,
-        required: true
-    },
+        type: String,    },
     zip: {
         type: String,
-        required: true
     }},
     address2: {street: {
         type: String,

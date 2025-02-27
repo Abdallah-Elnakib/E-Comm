@@ -8,19 +8,15 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const addressSchema = new mongoose_1.default.Schema({
     address1: { street: {
             type: String,
-            required: true
         },
         city: {
             type: String,
-            required: true
         },
         state: {
             type: String,
-            required: true
         },
         zip: {
             type: String,
-            required: true
         } },
     address2: { street: {
             type: String,
