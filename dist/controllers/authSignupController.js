@@ -18,8 +18,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = require("../models/userModel");
 const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, username, email, password } = req.body;
-        if (!firstName || !lastName || !username || !email || !password) {
+        const { firstName, lastName, username, email, address, password } = req.body;
+        if (!firstName || !lastName || !username || !email || !address || !password) {
             res.status(400).json({ message: "All fields are required" });
             return;
         }
@@ -39,6 +39,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             lastName,
             username,
             email,
+            address,
             password: hashPassword,
             position: "user"
         });

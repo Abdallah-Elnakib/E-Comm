@@ -6,8 +6,8 @@ import { User } from '../models/userModel';
 
 export const signupUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { firstName, lastName, username, email, password } = req.body;
-        if (!firstName || !lastName || !username || !email || !password) {
+        const { firstName, lastName, username, email, address, password } = req.body;
+        if (!firstName || !lastName || !username || !email || !address || !password) {
             res.status(400).json({ message: "All fields are required" });
             return;
         }
@@ -28,6 +28,7 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
             lastName,
             username,
             email,
+            address,
             password : hashPassword,
             position: "user"
         })
