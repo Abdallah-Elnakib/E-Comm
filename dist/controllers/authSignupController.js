@@ -24,12 +24,30 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             return;
         }
         if (password.length < 8) {
-            res.status(400).json({ message: "Password Must Be More Than 8" });
+            res.status(400).json({ message: "Password must be more than 8 characters" });
             return;
         }
-        const findemail = yield userModel_1.User.findOne({ email });
-        const findusername = yield userModel_1.User.findOne({ username });
-        if (findemail || findusername) {
+        const { address1, address2, address3 } = address;
+        if (!address1) {
+            res.status(400).json({ message: "All address fields are required" });
+            return;
+        }
+        const { street, city, state, zip } = address1;
+        if (!street || !city || !state || !zip) {
+            res.status(400).json({ message: "All address fields are required" });
+            return;
+        }
+        if (address2 && (!address2.street || !address2.city || !address2.state || !address2.zip)) {
+            res.status(400).json({ message: "All address fields are required" });
+            return;
+        }
+        if (address3 && (!address3.street || !address3.city || !address3.state || !address3.zip)) {
+            res.status(400).json({ message: "All address fields are required" });
+            return;
+        }
+        const findEmail = yield userModel_1.User.findOne({ email });
+        const findUsername = yield userModel_1.User.findOne({ username });
+        if (findEmail || findUsername) {
             res.status(401).json({ message: "User already exists" });
             return;
         }
@@ -39,7 +57,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             lastName,
             username,
             email,
-            address,
+            address: address,
             password: hashPassword,
             position: "user"
         });
@@ -51,8 +69,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-        res.status(200).json({ ACCESS_TOKEN });
-        return;
+        res.status(201).json({ ACCESS_TOKEN });
     }
     catch (error) {
         console.error(error);

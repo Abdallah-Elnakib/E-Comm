@@ -9,32 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAddressById = void 0;
+exports.addNewAddress = void 0;
 const userModel_1 = require("../models/userModel");
-const deleteAddressById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const addNewAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user_id } = req.params;
-    const { addressNumber } = req.body;
+    const { address } = req.body;
     try {
-        const user = yield userModel_1.User.findById(user_id);
-        if (!user) {
-            res.status(401).json({ message: "Invalid User ID" });
+        const users = yield userModel_1.User.findById({ _id: user_id });
+        if (!users) {
+            res.status(401).json({ message: "Invalid ID" });
             return;
         }
-        if (!addressNumber) {
-            res.status(400).json({ message: "Address Numeber is required" });
-            return;
-        }
-        if (addressNumber !== 'address1' && addressNumber !== 'address2' && addressNumber !== 'address3') {
-            res.status(401).json({ message: "Invalid Address Number" });
-            return;
-        }
-        delete user.address[addressNumber];
-        yield user.save();
-        res.status(200).json({ message: "Address deleted successfully" });
+        yield userModel_1.User.updateOne({ _id: user_id }, { $push: { address: address } });
+        res.status(200).json({ Address: users.address });
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.deleteAddressById = deleteAddressById;
+exports.addNewAddress = addNewAddress;

@@ -28,7 +28,7 @@ const deleteAddressById = (req, res) => __awaiter(void 0, void 0, void 0, functi
             res.status(401).json({ message: "Invalid Address Number" });
             return;
         }
-        delete user.address[addressNumber];
+        user.address[addressNumber] = undefined;
         yield user.save();
         res.status(200).json({ message: "Address deleted successfully" });
     }

@@ -1,14 +1,66 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+interface IAddress {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+}
+
 interface IUser extends Document {
     firstName: string;
     lastName: string;
     username: string;
     email: string;
-    address: string[];
+    address: IAddress;
     password: string;
     position: string;
 }
+
+const addressSchema: Schema = new mongoose.Schema({
+    address1: {street: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true
+    },
+    zip: {
+        type: String,
+        required: true
+    }},
+    address2: {street: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    state: {
+        type: String,
+    },
+    zip: {
+        type: String,
+    }},
+    address3: {street: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    state: {
+        type: String,
+
+    },
+    zip: {
+        type: String,
+    }},
+    
+});
 
 const userSchema: Schema = new mongoose.Schema({
     firstName: {
@@ -28,7 +80,7 @@ const userSchema: Schema = new mongoose.Schema({
         required: true,
     },
     address: {
-        type: [String],
+        type: addressSchema,
         required: true
     },
     password: {

@@ -3,23 +3,22 @@ import { User } from '../models/userModel';
 
 export const deleteAddressById = async (req: Request, res: Response): Promise<void> => {
     const { user_id } = req.params;
-    const { address_id } = req.body;
+    const { addressNumber }: { addressNumber: 'address1' | 'address2' | 'address3' } = req.body;
     try {
         const user = await User.findById(user_id);
         if (!user) {
             res.status(401).json({ message: "Invalid User ID" });
             return;
         }
-        if (!address_id) {
-            res.status(400).json({ message: "Address ID is required" });
+        if (!addressNumber) {
+            res.status(400).json({ message: "Address Numeber is required" });
             return;
         }
-        const index = address_id - 1;  
-        if (index < 0 || index >= user.address.length) {
-            res.status(401).json({ message: "Invalid Address ID" });
+        if (addressNumber !== 'address1' && addressNumber !== 'address2' && addressNumber !== 'address3') {
+            res.status(401).json({ message: "Invalid Address Number" });
             return;
         }
-        user.address.splice(index, 1);
+        await user.address[addressNumber].remove();
         await user.save();
         res.status(200).json({ message: "Address deleted successfully" });
 
