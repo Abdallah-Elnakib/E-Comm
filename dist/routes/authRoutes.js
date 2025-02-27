@@ -4,8 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-require('dotenv').config();
-const app = (0, express_1.default)();
-app.listen(process.env.PORT, () => {
-    console.log('Server is running on port 3000...........');
-});
+const authLoginControllers_1 = require("../controllers/authLoginControllers");
+const router = express_1.default.Router();
+router.post('/login', authLoginControllers_1.loginUser);
+exports.default = router;
