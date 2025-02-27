@@ -12,27 +12,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = void 0;
+exports.signupUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = require("../models/userModel");
-const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.body;
-        if (!email || !password) {
-            res.status(400).json({ message: "Email and password are required" });
+        const { firstName, lastName, username, email, password } = req.body;
+        if (!firstName || !lastName || !username || !email || !password) {
+            res.status(400).json({ message: "All fields are required" });
             return;
         }
-        const user = yield userModel_1.User.findOne({ email });
-        if (!user || !user.password) {
-            res.status(401).json({ message: "Invalid email or password" });
+        if (password.length < 8) {
+            res.status(400).json({ message: "Password Must Be More Than 8" });
             return;
         }
-        const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
-        if (!isPasswordValid) {
-            res.status(401).json({ message: "Invalid email or password" });
+        const findemail = yield userModel_1.User.findOne({ email });
+        const findusername = yield userModel_1.User.findOne({ username });
+        if (findemail || findusername) {
+            res.status(401).json({ message: "User already exists" });
             return;
         }
+        const hashPassword = yield bcrypt_1.default.hash(password, 10);
+        const user = yield userModel_1.User.create({
+            firstName,
+            lastName,
+            username,
+            email,
+            password: hashPassword,
+            position: "user"
+        });
         const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
         res.cookie("jwt", REFRESH_TOKEN, {
@@ -42,10 +51,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         res.status(200).json({ ACCESS_TOKEN });
+        return;
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.loginUser = loginUser;
+exports.signupUser = signupUser;
