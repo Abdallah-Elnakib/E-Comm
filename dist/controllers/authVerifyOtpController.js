@@ -28,7 +28,6 @@ function sendVerificationEmail(email, otp) {
         }
     });
 }
-// Controller function to handle OTP sending
 const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email } = req.body;
@@ -36,12 +35,9 @@ const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(400).json({ message: "Email is required" });
             return;
         }
-        // Generate a random OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        // Save the OTP to the database
         const otpDocument = new otpSchema_1.Otp({ email, otp });
         yield otpDocument.save();
-        // Send the OTP via email
         yield sendVerificationEmail(email, otp);
         res.status(200).json({ message: "OTP sent successfully" });
     }

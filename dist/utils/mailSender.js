@@ -12,13 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// filepath: /home/abdallahelnakib/Desktop/Projects-Node-Js/E-comm-Auth-Server/utils/mailSender.ts
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const transporter = nodemailer_1.default.createTransport({
-    service: 'gmail', // You can use any email service
+    service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Your email address
-        pass: process.env.EMAIL_PASS, // Your email password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
 });
 const mailSender = (to, subject, html) => __awaiter(void 0, void 0, void 0, function* () {
