@@ -12,49 +12,24 @@ interface IUser extends Document {
     lastName: string;
     username: string;
     email: string;
-    address: IAddress;
+    address: IAddress[];
     password: string;
     position: string;
 }
 
 const addressSchema: Schema = new mongoose.Schema({
-    address1: {street: {
+    street: {
         type: String,
     },
     city: {
         type: String,
     },
     state: {
-        type: String,    },
-    zip: {
-        type: String,
-    }},
-    address2: {street: {
-        type: String,
-    },
-    city: {
-        type: String,
-    },
-    state: {
-        type: String,
+        type: String,    
     },
     zip: {
         type: String,
-    }},
-    address3: {street: {
-        type: String,
-    },
-    city: {
-        type: String,
-    },
-    state: {
-        type: String,
-
-    },
-    zip: {
-        type: String,
-    }},
-    
+    }
 });
 
 const userSchema: Schema = new mongoose.Schema({
@@ -75,7 +50,7 @@ const userSchema: Schema = new mongoose.Schema({
         required: true,
     },
     address: {
-        type: addressSchema,
+        type: [addressSchema],
         required: true
     },
     password: {

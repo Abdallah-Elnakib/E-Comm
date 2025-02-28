@@ -6,42 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const addressSchema = new mongoose_1.default.Schema({
-    address1: { street: {
-            type: String,
-        },
-        city: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
-        zip: {
-            type: String,
-        } },
-    address2: { street: {
-            type: String,
-        },
-        city: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
-        zip: {
-            type: String,
-        } },
-    address3: { street: {
-            type: String,
-        },
-        city: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
-        zip: {
-            type: String,
-        } },
+    street: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    state: {
+        type: String,
+    },
+    zip: {
+        type: String,
+    }
 });
 const userSchema = new mongoose_1.default.Schema({
     firstName: {
@@ -61,7 +37,7 @@ const userSchema = new mongoose_1.default.Schema({
         required: true,
     },
     address: {
-        type: addressSchema,
+        type: [addressSchema],
         required: true
     },
     password: {

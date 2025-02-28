@@ -5,8 +5,8 @@ import { User } from '../models/userModel';
 
 export const signupUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { firstName, lastName, username, email, address, password } = req.body;
-        if (!firstName || !lastName || !username || !email || !address || !password) {
+        const { firstName, lastName, username, email, addresses, password } = req.body;
+        if (!firstName || !lastName || !username || !email || !addresses || !password) {
             res.status(400).json({ message: "All fields are required" });
             return;
         }
@@ -14,24 +14,16 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
             res.status(400).json({ message: "Password must be more than 8 characters" });
             return;
         }
-        const { address1, address2, address3} = address;
-        
-        if (!address1) {
-            res.status(400).json({ message: "All address fields are required" });
+        if (!Array.isArray(addresses) || addresses.length === 0) {
+            res.status(400).json({ message: "Addresses must be a non-empty array" });
             return;
         }
-        const {street, city, state, zip } = address1;
-        if (!street || !city || !state || !zip) {
-            res.status(400).json({ message: "All address fields are required" });
-            return;
-        }
-        if (address2 && (!address2.street || !address2.city || !address2.state || !address2.zip)) {
-            res.status(400).json({ message: "All address fields are required" });
-            return;
-        }
-        if (address3 && (!address3.street || !address3.city || !address3.state || !address3.zip)) {
-            res.status(400).json({ message: "All address fields are required" });
-            return;
+        for (const address of addresses) {
+            const { street, city, state, zip } = address;
+            if (!street || !city || !state || !zip) {
+                res.status(400).json({ message: "All address fields are required" });
+                return;
+            }
         }
         const findEmail = await User.findOne({ email });
         const findUsername = await User.findOne({ username });
@@ -40,12 +32,13 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
             return;
         }
         const hashPassword = await bcrypt.hash(password, 10);
+
         const user = await User.create({
             firstName,
             lastName,
             username,
             email,
-            address: address,
+            address: addresses,
             password: hashPassword,
             position: "user"
         });

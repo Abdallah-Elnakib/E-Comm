@@ -6,7 +6,7 @@ export const getAllAddress = async (req: Request, res: Response): Promise<void> 
     try {
         const users = await User.findById({ _id: user_id });
         if (!users) {
-            res.status(401).json({ message: "Invalid ID" });
+            res.status(401).json({ message: "Invalid User ID" });
             return;
         }
         res.status(200).json({Address : users.address});
