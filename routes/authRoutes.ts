@@ -10,9 +10,9 @@ const router: Router = express.Router();
 
 router.post('/login', loginUser);
 router.post('/signup', signupUser)
-router.get("/:id", getUserById)
-router.get("/address/:user_id", getAllAddress)
-router.delete('/address/:user_id', deleteAddressById)
-router.post('/address/:id', addNewAddress)
+router.get("/user/:id", getUserById)
+router.get("/address/get-all/:user_id", getAllAddress)
+router.delete('/address/delete/:user_id', deleteAddressById)
+router.post('/address/add-address/:user_id', addNewAddress)
 
 export default router;

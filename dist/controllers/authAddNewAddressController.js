@@ -17,11 +17,17 @@ const addNewAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const users = yield userModel_1.User.findById({ _id: user_id });
         if (!users) {
-            res.status(401).json({ message: "Invalid ID" });
+            res.status(401).json({ message: "Invalid User ID" });
+            return;
+        }
+        const { street, city, state, zip } = address;
+        if (!street || !city || !state || !zip) {
+            res.status(400).json({ message: "All address fields are required" });
             return;
         }
         yield userModel_1.User.updateOne({ _id: user_id }, { $push: { address: address } });
-        res.status(200).json({ Address: users.address });
+        const addressOfUser = yield userModel_1.User.findById({ _id: user_id });
+        res.status(200).json({ Address: addressOfUser === null || addressOfUser === void 0 ? void 0 : addressOfUser.address });
     }
     catch (error) {
         console.error(error);

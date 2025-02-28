@@ -16,7 +16,7 @@ const getAllAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const users = yield userModel_1.User.findById({ _id: user_id });
         if (!users) {
-            res.status(401).json({ message: "Invalid ID" });
+            res.status(401).json({ message: "Invalid User ID" });
             return;
         }
         res.status(200).json({ Address: users.address });
