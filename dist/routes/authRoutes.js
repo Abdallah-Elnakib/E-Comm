@@ -10,6 +10,7 @@ const authGetUserByIdControllers_1 = require("../controllers/authGetUserByIdCont
 const authGetAllAddressController_1 = require("../controllers/authGetAllAddressController");
 const authDeleteAddressByAddressNumberControllers_1 = require("../controllers/authDeleteAddressByAddressNumberControllers");
 const authAddNewAddressController_1 = require("../controllers/authAddNewAddressController");
+const authUpdateAddressByIdControllers_1 = require("../controllers/authUpdateAddressByIdControllers");
 const router = express_1.default.Router();
 router.post('/login', authLoginControllers_1.loginUser);
 router.post('/signup', authSignupController_1.signupUser);
@@ -17,4 +18,5 @@ router.get("/user/:id", authGetUserByIdControllers_1.getUserById);
 router.get("/address/get-all/:user_id", authGetAllAddressController_1.getAllAddress);
 router.delete('/address/delete/:user_id', authDeleteAddressByAddressNumberControllers_1.deleteAddressById);
 router.post('/address/add-address/:user_id', authAddNewAddressController_1.addNewAddress);
+router.put('/address/update-address/:user_id', authUpdateAddressByIdControllers_1.updateAddress);
 exports.default = router;
