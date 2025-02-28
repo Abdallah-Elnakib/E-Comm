@@ -19,7 +19,6 @@ async function sendVerificationEmail(email: string, otp: string) {
   }
 }
 
-// Controller function to handle OTP sending
 export const sendOtp = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email } = req.body;
@@ -27,15 +26,11 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({ message: "Email is required" });
       return;
     }
-
-    // Generate a random OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Save the OTP to the database
     const otpDocument = new Otp({ email, otp });
     await otpDocument.save();
 
-    // Send the OTP via email
     await sendVerificationEmail(email, otp);
 
     res.status(200).json({ message: "OTP sent successfully" });
