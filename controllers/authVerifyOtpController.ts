@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/userModel';
-import { Otp } from '../models/otpSchema'; // Assuming you have an OTP model
+import { Otp } from '../models/otpSchema'; 
 import mailSender from '../utils/mailSender';
 
 
