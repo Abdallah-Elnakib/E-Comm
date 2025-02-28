@@ -1,12 +1,13 @@
 import express, { Router } from 'express';
-import { loginUser } from '../controllers/authLoginControllers';
-import { signupUser } from '../controllers/authSignupController';
+import {loginUser} from '../controllers/authLoginControllers';
+import {signupUser} from '../controllers/authSignupController';
 import {getUserById} from '../controllers/authGetUserByIdControllers'
 import {getAllAddress} from '../controllers/authGetAllAddressController'
 import {deleteAddressById} from '../controllers/authDeleteAddressByAddressNumberControllers'
 import {addNewAddress} from '../controllers/authAddNewAddressController'
-import {updateAddress } from '../controllers/authUpdateAddressByIdControllers';
+import {updateAddress} from '../controllers/authUpdateAddressByIdControllers';
 import {logout} from '../controllers/authLogoutControllers'
+import {sendOtp} from '../controllers/authVerifyOtpController'
 
 const router: Router = express.Router();
 
@@ -21,5 +22,7 @@ router.delete('/address/delete/:user_id', deleteAddressById)
 router.post('/address/add-address/:user_id', addNewAddress)
 router.put('/address/update-address/:user_id', updateAddress)
 
+router.post("/verify-otp", sendOtp)
 
 export default router;
+
