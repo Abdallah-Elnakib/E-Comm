@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { User } from '../models/userModel';
-import { Otp } from '../models/otpSchema'; // Assuming you have an OTP model
+import { Otp } from '../models/otpSchema'; 
 import mailSender from '../utils/mailSender';
+import { checkMail } from '../utils/CheckMail';
 
 
 async function sendVerificationEmail(email: string, otp: string) {
@@ -26,6 +26,14 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({ message: "Email is required" });
       return;
     }
+
+    const isEmailValid = await checkMail(email);
+    
+    if (isEmailValid === 'UNDELIVERABLE') {
+      res.status(400).json({ message: "Invalid email address" });
+      return;
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const otpDocument = new Otp({ email, otp });

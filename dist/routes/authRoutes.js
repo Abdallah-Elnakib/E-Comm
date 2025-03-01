@@ -12,7 +12,9 @@ const authDeleteAddressByAddressNumberControllers_1 = require("../controllers/au
 const authAddNewAddressController_1 = require("../controllers/authAddNewAddressController");
 const authUpdateAddressByIdControllers_1 = require("../controllers/authUpdateAddressByIdControllers");
 const authLogoutControllers_1 = require("../controllers/authLogoutControllers");
-const authVerifyOtpController_1 = require("../controllers/authVerifyOtpController");
+const authSendOtpController_1 = require("../controllers/authSendOtpController");
+const authResendOtpControllers_1 = require("../controllers/authResendOtpControllers");
+const authVerifyOtpControllers_1 = require("../controllers/authVerifyOtpControllers");
 const router = express_1.default.Router();
 router.post('/login', authLoginControllers_1.loginUser);
 router.post('/signup', authSignupController_1.signupUser);
@@ -22,5 +24,7 @@ router.get("/address/get-all/:user_id", authGetAllAddressController_1.getAllAddr
 router.delete('/address/delete/:user_id', authDeleteAddressByAddressNumberControllers_1.deleteAddressById);
 router.post('/address/add-address/:user_id', authAddNewAddressController_1.addNewAddress);
 router.put('/address/update-address/:user_id', authUpdateAddressByIdControllers_1.updateAddress);
-router.post("/verify-otp", authVerifyOtpController_1.sendOtp);
+router.post("/send-otp", authSendOtpController_1.sendOtp);
+router.post("/resend-otp", authResendOtpControllers_1.resendOtp);
+router.post("/verify-otp", authVerifyOtpControllers_1.verifyOtp);
 exports.default = router;

@@ -7,7 +7,9 @@ import {deleteAddressById} from '../controllers/authDeleteAddressByAddressNumber
 import {addNewAddress} from '../controllers/authAddNewAddressController'
 import {updateAddress} from '../controllers/authUpdateAddressByIdControllers';
 import {logout} from '../controllers/authLogoutControllers'
-import {sendOtp} from '../controllers/authVerifyOtpController'
+import {sendOtp} from '../controllers/authSendOtpController'
+import {resendOtp} from '../controllers/authResendOtpControllers'
+import {verifyOtp} from '../controllers/authVerifyOtpControllers'
 
 const router: Router = express.Router();
 
@@ -22,7 +24,9 @@ router.delete('/address/delete/:user_id', deleteAddressById)
 router.post('/address/add-address/:user_id', addNewAddress)
 router.put('/address/update-address/:user_id', updateAddress)
 
-router.post("/verify-otp", sendOtp)
+router.post("/send-otp", sendOtp)
+router.post("/resend-otp", resendOtp)
+router.post("/verify-otp", verifyOtp)
 
 export default router;
 

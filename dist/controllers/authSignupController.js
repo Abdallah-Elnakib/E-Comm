@@ -16,6 +16,7 @@ exports.signupUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = require("../models/userModel");
+const CheckMail_1 = require("../utils/CheckMail");
 const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, username, email, addresses, password } = req.body;
@@ -42,6 +43,11 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const findUsername = yield userModel_1.User.findOne({ username });
         if (findEmail || findUsername) {
             res.status(401).json({ message: "User already exists" });
+            return;
+        }
+        const isEmailValid = yield (0, CheckMail_1.checkMail)(email);
+        if (isEmailValid === 'UNDELIVERABLE') {
+            res.status(400).json({ message: "Invalid email address" });
             return;
         }
         const hashPassword = yield bcrypt_1.default.hash(password, 10);
