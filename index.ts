@@ -5,12 +5,21 @@ import mongoose from 'mongoose';
 import { connDB } from './config/connDB';
 import cors from 'cors';
 import auth from './routes/authRoutes';
+import session from 'express-session';
+
 const app: Express = express();
 
 connDB();
 
 app.use(express.json());
 app.use(cors());
+app.use(session({
+    secret: process.env.SESSION_SECRET as string,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+  }));
+  
 
 app.use('/api/auth', auth);
 

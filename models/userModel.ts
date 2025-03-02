@@ -15,6 +15,7 @@ interface IUser extends Document {
     address: IAddress[];
     password: string;
     position: string;
+    resetPasswordToken?: string;
 }
 
 const addressSchema: Schema = new mongoose.Schema({
@@ -60,6 +61,9 @@ const userSchema: Schema = new mongoose.Schema({
     position: {
         type: String,
         required: true,
+    },
+    resetPasswordToken: {
+        type: String,
     }
 }, {
     timestamps: true

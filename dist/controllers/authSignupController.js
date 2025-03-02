@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupUser = void 0;
+const zod_1 = require("zod");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = require("../models/userModel");
@@ -62,17 +63,17 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
         const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
-        res.cookie("jwt", REFRESH_TOKEN, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
+        req.session.refreshToken = REFRESH_TOKEN;
         res.status(201).json({ ACCESS_TOKEN });
     }
     catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        if (error instanceof zod_1.z.ZodError) {
+            res.status(400).json({ message: error.errors });
+        }
+        else {
+            console.error(error);
+            res.status(500).json({ message: "Internal server error" });
+        }
     }
 });
 exports.signupUser = signupUser;

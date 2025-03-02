@@ -35,12 +35,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
-        res.cookie("jwt", REFRESH_TOKEN, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
+        req.session.refreshToken = REFRESH_TOKEN;
         res.status(200).json({ ACCESS_TOKEN });
     }
     catch (error) {

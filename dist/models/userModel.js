@@ -47,6 +47,9 @@ const userSchema = new mongoose_1.default.Schema({
     position: {
         type: String,
         required: true,
+    },
+    resetPasswordToken: {
+        type: String,
     }
 }, {
     timestamps: true

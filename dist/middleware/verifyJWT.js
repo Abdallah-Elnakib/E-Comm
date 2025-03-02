@@ -8,16 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = void 0;
-const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.verifyJWT = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const verifyJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        res.clearCookie('connect.sid');
-        res.status(200).json({ message: "Logout successful" });
+        const token = (_a = req.session) === null || _a === void 0 ? void 0 : _a.refreshToken;
+        if (!token) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+        jsonwebtoken_1.default.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => __awaiter(void 0, void 0, void 0, function* () {
+            if (err) {
+                res.status(401).json({ message: "Unauthorized" });
+                return;
+            }
+            next();
+        }));
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.logout = logout;
+exports.verifyJWT = verifyJWT;

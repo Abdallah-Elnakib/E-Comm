@@ -12,17 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendOtp = void 0;
-const otpSchema_1 = require("../models/otpSchema");
+exports.forgotPassword = void 0;
+const userModel_1 = require("../models/userModel");
 const mailSender_1 = __importDefault(require("../utils/mailSender"));
-const CheckMail_1 = require("../utils/CheckMail");
-const zod_1 = require("zod");
-function sendVerificationEmail(email, otp) {
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+function sendVerificationEmail(email, token) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const mailResponse = yield (0, mailSender_1.default)(email, "Verification Email", `<h1>Please confirm your OTP</h1>
-       <p>Here is your OTP code: ${otp}</p>`);
-            console.log("Email sent successfully: ", mailResponse);
+            const resetPasswordUrl = `http://localhost:3000/reset-password?token=${token}`;
+            const mailResponse = yield (0, mailSender_1.default)(email, "Reset Password", `<h1>Reset Your Password</h1>
+       <p>Click the button below to reset your password:</p>
+       <a href="${resetPasswordUrl}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: blue; text-decoration: none; border-radius: 5px;">Reset Password</a>`);
         }
         catch (error) {
             console.log("Error occurred while sending email: ", error);
@@ -30,33 +30,26 @@ function sendVerificationEmail(email, otp) {
         }
     });
 }
-const sendOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email } = req.body;
         if (!email) {
             res.status(400).json({ message: "Email is required" });
             return;
         }
-        const isEmailValid = yield (0, CheckMail_1.checkMail)(email);
-        if (isEmailValid === 'UNDELIVERABLE') {
-            res.status(400).json({ message: "Invalid email address" });
+        const user = yield userModel_1.User.findOne({ email });
+        if (!user) {
+            res.status(400).json({ message: "Email not found" });
             return;
         }
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpDocument = new otpSchema_1.Otp({ email, otp });
-        yield otpDocument.save();
-        yield sendVerificationEmail(email, otp);
-        res.status(200).json({ message: "OTP sent successfully" });
+        const token = jsonwebtoken_1.default.sign({ userId: user._id }, process.env.RESET_PASSWORD_SECRET, { expiresIn: '1h' });
+        yield userModel_1.User.updateOne({ email }, { $set: { resetPasswordToken: token } });
+        yield sendVerificationEmail(email, token);
+        res.status(200).json({ message: "Reset password email sent successfully" });
     }
     catch (error) {
-        if (error instanceof zod_1.z.ZodError) {
-            const zodError = error;
-            res.status(400).json({ message: zodError.errors });
-        }
-        else {
-            console.error(error);
-            res.status(500).json({ message: "Internal server error" });
-        }
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.sendOtp = sendOtp;
+exports.forgotPassword = forgotPassword;

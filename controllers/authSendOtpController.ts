@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { Otp } from '../models/otpSchema'; 
 import mailSender from '../utils/mailSender';
 import { checkMail } from '../utils/CheckMail';
+import { z } from 'zod';
+
 
 
 async function sendVerificationEmail(email: string, otp: string) {
@@ -44,7 +46,14 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ message: "OTP sent successfully" });
     
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    
+    if (error instanceof z.ZodError) {
+      const zodError = error as z.ZodError;
+      res.status(400).json({ message: zodError.errors });
+      
+    } else {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
 };

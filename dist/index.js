@@ -10,10 +10,17 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const connDB_1 = require("./config/connDB");
 const cors_1 = __importDefault(require("cors"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+const express_session_1 = __importDefault(require("express-session"));
 const app = (0, express_1.default)();
 (0, connDB_1.connDB)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
+app.use((0, express_session_1.default)({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
 app.use('/api/auth', authRoutes_1.default);
 mongoose_1.default.connection.once('open', () => {
     console.log('Database connected successfully...................');
