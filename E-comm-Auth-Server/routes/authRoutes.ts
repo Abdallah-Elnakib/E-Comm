@@ -1,4 +1,3 @@
-// filepath: /home/abdallahelnakib/Desktop/Projects-Node-Js/E-comm-Auth-Server/routes/authRoutes.ts
 import express, { Router } from 'express';
 import { loginUser } from '../controllers/authLoginControllers';
 import { signupUser } from '../controllers/authSignupController';

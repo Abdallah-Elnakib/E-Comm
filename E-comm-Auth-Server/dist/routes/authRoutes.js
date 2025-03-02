@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// filepath: /home/abdallahelnakib/Desktop/Projects-Node-Js/E-comm-Auth-Server/routes/authRoutes.ts
 const express_1 = __importDefault(require("express"));
 const authLoginControllers_1 = require("../controllers/authLoginControllers");
 const authSignupController_1 = require("../controllers/authSignupController");
@@ -23,6 +22,8 @@ const router = express_1.default.Router();
 router.post('/login', authLoginControllers_1.loginUser);
 router.post('/signup', authSignupController_1.signupUser);
 router.get('/logout', authLogoutControllers_1.logout);
+router.post("/forgot-password", authForgotPasswordControllers_1.forgotPassword);
+router.post("/reset-password", authResetPasswordControllers_1.resetPassword);
 router.use(verifyJWT_1.verifyJWT);
 router.get('/user/:id', authGetUserByIdControllers_1.getUserById);
 router.get('/address/get-all/:user_id', authGetAllAddressController_1.getAllAddress);
@@ -32,6 +33,4 @@ router.put('/address/update-address/:user_id', authUpdateAddressByIdControllers_
 router.post('/send-otp', authSendOtpController_1.sendOtp);
 router.post('/resend-otp', authResendOtpControllers_1.resendOtp);
 router.post('/verify-otp', authVerifyOtpControllers_1.verifyOtp);
-router.post("/forgot-password", authForgotPasswordControllers_1.forgotPassword);
-router.post("/reset-password", authResetPasswordControllers_1.resetPassword);
 exports.default = router;
