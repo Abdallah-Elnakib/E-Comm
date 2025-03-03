@@ -1,20 +1,19 @@
 import mysql from 'mysql';
 
-const connDB = async (): Promise<void> => {
+const connDB = async (): Promise<mysql.Connection> => {
     try {
-        const con = mysql.createConnection({
+        const con = await mysql.createConnection({
             host: process.env.HOSTDATABASE,
             user: process.env.USERNAMEDATABASE,
             password: process.env.PASSWORSDATABASE,
             port: Number(process.env.PORTDATABASE),
+            database : process.env.DATABASENAME
         });
-        con.connect(function(err) {
-            if (err) throw err;
-            console.log("Connected!.......");
-        });
+        return con;
     } catch (error) {
         console.log(error);
-        }
+        throw error;
+    }
 };
     
     

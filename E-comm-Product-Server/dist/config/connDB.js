@@ -16,20 +16,18 @@ exports.connDB = void 0;
 const mysql_1 = __importDefault(require("mysql"));
 const connDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const con = mysql_1.default.createConnection({
+        const con = yield mysql_1.default.createConnection({
             host: process.env.HOSTDATABASE,
             user: process.env.USERNAMEDATABASE,
             password: process.env.PASSWORSDATABASE,
             port: Number(process.env.PORTDATABASE),
+            database: process.env.DATABASENAME
         });
-        con.connect(function (err) {
-            if (err)
-                throw err;
-            console.log("Connected!");
-        });
+        return con;
     }
     catch (error) {
         console.log(error);
+        throw error;
     }
 });
 exports.connDB = connDB;
