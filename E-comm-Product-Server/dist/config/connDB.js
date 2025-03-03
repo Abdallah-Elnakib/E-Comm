@@ -13,19 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connDB = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+const mysql_1 = __importDefault(require("mysql"));
 const connDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const dbUrl = process.env.DATABASEURL;
-        if (!dbUrl) {
-            throw new Error("DATABASEURL is not defined in the environment variables");
-        }
-        yield mongoose_1.default.connect(dbUrl);
+        const con = mysql_1.default.createConnection({
+            host: process.env.HOSTDATABASE,
+            user: process.env.USERNAMEDATABASE,
+            password: process.env.PASSWORSDATABASE,
+            port: Number(process.env.PORTDATABASE),
+        });
+        con.connect(function (err) {
+            if (err)
+                throw err;
+            console.log("Connected!");
+        });
     }
     catch (error) {
-        console.error("Database connection failed:", error);
+        console.log(error);
     }
 });
 exports.connDB = connDB;
