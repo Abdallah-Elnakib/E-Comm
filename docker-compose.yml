@@ -8,6 +8,7 @@ services:
       - ./E-comm-Auth-Server/.env
     depends_on:
       - mongo
+
   products-service:
     build: ./E-comm-Product-Server
     ports:
@@ -38,6 +39,16 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: "rabbitmq"
+    ports:
+      - "5672:5672"  
+      - "15672:15672"  
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
 
 volumes:
   mongo-data:

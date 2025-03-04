@@ -13,13 +13,14 @@ import { verifyOtp } from '../controllers/authVerifyOtpControllers';
 import { forgotPassword } from '../controllers/authForgotPasswordControllers';
 import { resetPassword } from '../controllers/authResetPasswordControllers';
 import {verifyJWT} from '../middleware/verifyJWT';
+import {checkUser} from '../controllers/authCheckUserControllers';
 
 const router: Router = express.Router();
 
 router.post('/login', loginUser);
 router.post('/signup', signupUser);
 router.get('/logout', logout);
-router.get('/check-user-auth', verifyJWT);
+router.get('/check-user-auth', checkUser);
 
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);

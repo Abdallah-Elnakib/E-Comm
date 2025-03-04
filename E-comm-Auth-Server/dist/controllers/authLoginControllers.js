@@ -33,8 +33,8 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(401).json({ message: "Invalid email or password" });
             return;
         }
-        const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
-        const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+        const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userInfo: { userId: user._id, role: user.position } }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+        const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userInfo: { userId: user._id, role: user.position } }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
         req.session.refreshToken = REFRESH_TOKEN;
         res.status(200).json({ ACCESS_TOKEN });
     }

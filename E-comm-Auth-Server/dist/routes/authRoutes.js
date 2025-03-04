@@ -18,11 +18,12 @@ const authVerifyOtpControllers_1 = require("../controllers/authVerifyOtpControll
 const authForgotPasswordControllers_1 = require("../controllers/authForgotPasswordControllers");
 const authResetPasswordControllers_1 = require("../controllers/authResetPasswordControllers");
 const verifyJWT_1 = require("../middleware/verifyJWT");
+const authCheckUserControllers_1 = require("../controllers/authCheckUserControllers");
 const router = express_1.default.Router();
 router.post('/login', authLoginControllers_1.loginUser);
 router.post('/signup', authSignupController_1.signupUser);
 router.get('/logout', authLogoutControllers_1.logout);
-router.get('/check-user-auth', verifyJWT_1.verifyJWT);
+router.get('/check-user-auth', authCheckUserControllers_1.checkUser);
 router.post("/forgot-password", authForgotPasswordControllers_1.forgotPassword);
 router.post("/reset-password", authResetPasswordControllers_1.resetPassword);
 router.use(verifyJWT_1.verifyJWT);
