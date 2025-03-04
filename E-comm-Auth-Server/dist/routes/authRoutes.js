@@ -22,6 +22,7 @@ const router = express_1.default.Router();
 router.post('/login', authLoginControllers_1.loginUser);
 router.post('/signup', authSignupController_1.signupUser);
 router.get('/logout', authLogoutControllers_1.logout);
+router.get('/check-user-auth', verifyJWT_1.verifyJWT);
 router.post("/forgot-password", authForgotPasswordControllers_1.forgotPassword);
 router.post("/reset-password", authResetPasswordControllers_1.resetPassword);
 router.use(verifyJWT_1.verifyJWT);

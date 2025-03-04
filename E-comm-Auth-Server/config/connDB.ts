@@ -4,7 +4,7 @@ dotenv.config();
 
 const connDB = async (): Promise<void> => {
     try {
-        const dbUrl: string | undefined = process.env.DATABASEURL;
+        const dbUrl: string | undefined = process.env.MONGO_URI;
         if (!dbUrl) {
             throw new Error("DATABASEURL is not defined in the environment variables");
         }

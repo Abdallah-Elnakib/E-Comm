@@ -19,6 +19,7 @@ const router: Router = express.Router();
 router.post('/login', loginUser);
 router.post('/signup', signupUser);
 router.get('/logout', logout);
+router.get('/check-user-auth', verifyJWT);
 
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);

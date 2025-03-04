@@ -5,8 +5,8 @@
   "scripts": {
     "test": "jest",
     "build": "npx tsc",
-    "start": "nodemon dist/index.js",
-    "dev": "npx tsc && nodemon dist/index.js"
+    "start": "npx tsc && nodemon dist/index.js",
+    "dev": "nodemon dist/index.js"
   },
   "keywords": [],
   "author": "",
