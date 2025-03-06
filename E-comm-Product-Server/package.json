@@ -24,6 +24,7 @@
     "typescript": "^5.8.2"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.7",
     "@types/cors": "^2.8.17",
     "@types/mysql": "^2.15.26"
   }

@@ -18,17 +18,21 @@ const amqplib_1 = __importDefault(require("amqplib"));
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
 let channel;
 function connectRabbitMQ() {
-    return __awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, arguments, void 0, function* (retries = 5) {
         try {
             if (!RABBITMQ_URL) {
                 throw new Error("RABBITMQ_URL is not defined");
             }
             const connection = yield amqplib_1.default.connect(RABBITMQ_URL);
             exports.channel = channel = yield connection.createChannel();
-            console.log("Connected to RabbitMQ");
+            console.log("✅ Connected to RabbitMQ");
         }
         catch (error) {
-            console.error("RabbitMQ Connection Error:", error);
+            console.error("❌ RabbitMQ Connection Error:", error);
+            if (retries > 0) {
+                console.log(`Retrying in 5 seconds... (${retries} retries left)`);
+                setTimeout(() => connectRabbitMQ(retries - 1), 5000);
+            }
         }
     });
 }

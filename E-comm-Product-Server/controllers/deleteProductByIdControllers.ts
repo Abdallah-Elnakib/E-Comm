@@ -20,9 +20,11 @@ export const deleteProductById = async (req: Request, res: Response): Promise<vo
             }
             res.json({ message: 'Product deleted successfully' });
             con.end();
+            return;
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+        return;
     }
 }

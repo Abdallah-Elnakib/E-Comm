@@ -6,8 +6,7 @@ import { connDB } from './config/connDB';
 import cors from 'cors';
 import auth from './routes/authRoutes';
 import session from 'express-session';
-import {connectRabbitMQ} from './config/rabbitmq';
-
+import { connectRabbitMQ } from './config/rabbitmq';
 const app: Express = express();
 
 connDB();

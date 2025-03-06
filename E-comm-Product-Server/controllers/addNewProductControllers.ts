@@ -9,28 +9,24 @@ export const addNewProduct = async (req: Request, res: Response): Promise<void> 
             return;
         }
 
-        connDB().then((con) => {
-            console.log("Connected Database!.......");
-            const sql = "INSERT INTO Product (Title, Description, Category, Price, Rating, Stock) VALUES ?";
-            const values = [[title, description, category, price, 0, stock]];
+        const con = await connDB();
+        const sql = "INSERT INTO Product (Title, Description, Category, Price, Rating, Stock) VALUES ?";
+        const values = [[title, description, category, price, 0, stock]];
 
-            con.query(sql, [values], function (err, result) {
-                if (err) {
-                    console.error("Error inserting product: ", err);
-                    res.status(500).json({ message: "Internal server error" });
-                    con.end();
-                    return;
-                }
-                res.status(200).json({ message: "Product added successfully" });
+        con.query(sql, [values], (err, result) => {
+            if (err) {
+                console.error("Error inserting product: ", err);
+                res.status(500).json({ message: "Internal server error" });
                 con.end();
                 return;
-            });
-        }).catch((err) => {
-            console.error("Database connection failed: ", err);
-            res.status(500).json({ message: "Internal server error" });
+            }
+            res.status(200).json({ message: "Product added successfully" });
+            return;
+            con.end();
         });
     } catch (error) {
-        console.error(error);
+        console.error("Database connection failed: ", error);
         res.status(500).json({ message: "Internal server error" });
+        return;
     }
 };

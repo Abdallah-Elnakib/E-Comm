@@ -18,6 +18,7 @@ export const addNewAddress = async (req: Request, res: Response): Promise<void> 
         await User.updateOne({ _id: user_id }, { $push: { address: address } });
         const addressOfUser = await User.findById({ _id: user_id });
         res.status(200).json({ Address: addressOfUser?.address });
+        return;
         
     } catch (error) {
         console.error(error);
