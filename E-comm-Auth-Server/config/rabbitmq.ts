@@ -1,5 +1,6 @@
 import amqp from 'amqplib';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
 let channel: amqp.Channel;
 async function connectRabbitMQ(retries = 5) {
@@ -14,9 +15,10 @@ async function connectRabbitMQ(retries = 5) {
         channel.consume('auth', async (msg) => {
             if (msg) {
                 console.log("📩 Message received from RabbitMQ Prodcut-Server:", msg.content.toString());
-                const response = await fetch('http://localhost:3000/api/auth/check-user-auth')
+                const response = await fetch(process.env.ENDPOINTAUTH + '/api/auth/check-user-auth')
                 const data = await response.json();
                 console.log("📤 Message sent to RabbitMQ Prodcut-Server:", data);
+                await channel.assertQueue('response', { durable: false });
                 channel.sendToQueue('response', Buffer.from(JSON.stringify(data)));
             }
         }, { noAck: true });

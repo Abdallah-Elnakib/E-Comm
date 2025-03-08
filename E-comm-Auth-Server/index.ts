@@ -7,7 +7,8 @@ import cors from 'cors';
 import auth from './routes/authRoutes';
 import session from 'express-session';
 import { connectRabbitMQ } from './config/rabbitmq';
-const app: Express = express();
+export const app: Express = express();
+
 
 connDB();
 
@@ -27,7 +28,7 @@ mongoose.connection.once('open', () => {
     console.log('Database connected successfully...................');
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
-        console.log(`Server is running on port ${port}...........`);
+        console.log(`🚀 Auth-Server is running on port ${port}...........`);
     });
     connectRabbitMQ();
 });

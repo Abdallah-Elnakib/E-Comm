@@ -1,5 +1,5 @@
 {
-  "name": "e-comm-product-server",
+  "name": "getway-server",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -14,20 +14,13 @@
   "description": "",
   "dependencies": {
     "@types/express": "^5.0.0",
-    "amqplib": "^0.10.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.11.0",
-    "mysql": "^2.18.1",
     "nodemon": "^3.1.9",
-    "typescript": "^5.8.2",
-    "uuid": "^11.1.0"
+    "typescript": "^5.8.2"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.7",
-    "@types/cors": "^2.8.17",
-    "@types/mysql": "^2.15.26",
-    "@types/uuid": "^10.0.0"
+    "@types/cors": "^2.8.17"
   }
 }

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 export const checkUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const token = req.session?.refreshToken;
-        console.log(token,1);
+        console.log('fetching...................');
         if (!token) {
             res.status(401).json({ message: "Unauthorized" });
             return;
