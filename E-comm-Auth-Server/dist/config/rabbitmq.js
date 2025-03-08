@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.channel = void 0;
 exports.connectRabbitMQ = connectRabbitMQ;
 const amqplib_1 = __importDefault(require("amqplib"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
 let channel;
 function connectRabbitMQ() {
@@ -24,8 +25,19 @@ function connectRabbitMQ() {
                 throw new Error("RABBITMQ_URL is not defined");
             }
             const connection = yield amqplib_1.default.connect(RABBITMQ_URL);
-            exports.channel = channel = yield connection.createChannel();
-            console.log("✅ Connected to RabbitMQ");
+            channel = yield connection.createChannel();
+            console.log("✅ Connected to RabbitMQ Auth-Server");
+            const result = yield channel.assertQueue('auth', { durable: false });
+            channel.consume('auth', (msg) => __awaiter(this, void 0, void 0, function* () {
+                if (msg) {
+                    console.log("📩 Message received from RabbitMQ Prodcut-Server:", msg.content.toString());
+                    const response = yield fetch(process.env.ENDPOINTAUTH + '/api/auth/check-user-auth');
+                    const data = yield response.json();
+                    console.log("📤 Message sent to RabbitMQ Prodcut-Server:", data);
+                    yield channel.assertQueue('response', { durable: false });
+                    channel.sendToQueue('response', Buffer.from(JSON.stringify(data)));
+                }
+            }), { noAck: true });
         }
         catch (error) {
             console.error("❌ RabbitMQ Connection Error:", error);

@@ -18,29 +18,25 @@ const addNewProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(400).json({ message: "All fields are required" });
             return;
         }
-        (0, connDB_1.connDB)().then((con) => {
-            console.log("Connected Database!.......");
-            const sql = "INSERT INTO Product (Title, Description, Category, Price, Rating, Stock) VALUES ?";
-            const values = [[title, description, category, price, 0, stock]];
-            con.query(sql, [values], function (err, result) {
-                if (err) {
-                    console.error("Error inserting product: ", err);
-                    res.status(500).json({ message: "Internal server error" });
-                    con.end();
-                    return;
-                }
-                res.status(200).json({ message: "Product added successfully" });
+        const con = yield (0, connDB_1.connDB)();
+        const sql = "INSERT INTO Product (Title, Description, Category, Price, Rating, Stock) VALUES ?";
+        const values = [[title, description, category, price, 0, stock]];
+        con.query(sql, [values], (err, result) => {
+            if (err) {
+                console.error("Error inserting product: ", err);
+                res.status(500).json({ message: "Internal server error" });
                 con.end();
                 return;
-            });
-        }).catch((err) => {
-            console.error("Database connection failed: ", err);
-            res.status(500).json({ message: "Internal server error" });
+            }
+            res.status(200).json({ message: "Product added successfully" });
+            return;
+            con.end();
         });
     }
     catch (error) {
-        console.error(error);
+        console.error("Database connection failed: ", error);
         res.status(500).json({ message: "Internal server error" });
+        return;
     }
 });
 exports.addNewProduct = addNewProduct;

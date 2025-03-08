@@ -9,15 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProductById = void 0;
+exports.editProductById = void 0;
 const connDB_1 = require("../config/connDB");
-const deleteProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const editProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const con = yield (0, connDB_1.connDB)();
         const id = req.params.id;
-        con.query('DELETE FROM Product WHERE Id = ?', [id], (err, results) => {
+        const { title, description, category, price, stock } = req.body;
+        if (!title || !price || !description || !category || !stock) {
+            res.status(400).json({ message: 'All fields are required' });
+            con.end();
+            return;
+        }
+        con.query('UPDATE Product SET Title = ?, Description = ?, Category = ?, Price = ?, Stock = ? WHERE Id = ?', [title, description, category, price, stock, id], (err, results) => {
             if (err) {
-                console.error("Error deleting product: ", err);
+                console.error("Error updating product: ", err);
                 res.status(500).json({ message: 'Internal server error' });
                 con.end();
                 return;
@@ -27,15 +33,13 @@ const deleteProductById = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 con.end();
                 return;
             }
-            res.json({ message: 'Product deleted successfully' });
+            res.json({ message: 'Product updated successfully' });
             con.end();
-            return;
         });
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
-        return;
     }
 });
-exports.deleteProductById = deleteProductById;
+exports.editProductById = editProductById;

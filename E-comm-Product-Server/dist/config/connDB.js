@@ -17,11 +17,11 @@ const mysql_1 = __importDefault(require("mysql"));
 const connDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const con = yield mysql_1.default.createConnection({
-            host: process.env.HOSTDATABASE,
-            user: process.env.USERNAMEDATABASE,
-            password: process.env.PASSWORSDATABASE,
+            host: process.env.MYSQL_ROOT_PASSWORD,
+            user: process.env.MYSQL_USER,
+            password: process.env.MYSQL_PASSWORD,
             port: Number(process.env.PORTDATABASE),
-            database: process.env.DATABASENAME
+            database: process.env.MYSQL_DATABASE
         });
         return con;
     }

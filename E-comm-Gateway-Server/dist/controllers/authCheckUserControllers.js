@@ -13,29 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkUser = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
-        const token = (_a = req.session) === null || _a === void 0 ? void 0 : _a.refreshToken;
-        console.log('fetching...................');
-        if (!token) {
-            res.status(401).json({ message: "Unauthorized" });
-            return;
-        }
-        jsonwebtoken_1.default.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-            if (err) {
-                res.status(401).json({ message: "Unauthorized" });
-                return;
-            }
-            if (decoded && typeof decoded === 'object' && 'userInfo' in decoded) {
-                res.status(200).json({ message: decoded.userInfo });
-                return;
-            }
-            else {
-                res.status(401).json({ message: "Unauthorized" });
-            }
-        });
+        const response = yield fetch(`${process.env.AUTHSERVER}/api/auth/check-user-auth`);
+        res.status(response.status).json(yield response.json());
+        return;
     }
     catch (error) {
         console.error(error);

@@ -28,6 +28,7 @@ const addNewAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         yield userModel_1.User.updateOne({ _id: user_id }, { $push: { address: address } });
         const addressOfUser = yield userModel_1.User.findById({ _id: user_id });
         res.status(200).json({ Address: addressOfUser === null || addressOfUser === void 0 ? void 0 : addressOfUser.address });
+        return;
     }
     catch (error) {
         console.error(error);
