@@ -16,6 +16,6 @@ const connDB = async (): Promise<mysql.Connection> => {
     }
 };
     
-    
+connDB()
 
 export { connDB };

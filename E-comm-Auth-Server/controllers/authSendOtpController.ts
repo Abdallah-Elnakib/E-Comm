@@ -30,7 +30,6 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
     }
 
     const isEmailValid = await checkMail(email);
-    
     if (isEmailValid === 'UNDELIVERABLE') {
       res.status(400).json({ message: "Invalid email address" });
       return;

@@ -37,7 +37,7 @@ services:
       - mongo-data:/data/db
 
   mysql:
-    image: mysql:8
+    image: mysql:latest
     container_name: mysql-db
     restart: always
     environment:

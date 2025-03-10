@@ -1,7 +1,8 @@
 import amqp from 'amqplib';
+import { v4 as uuidv4 } from 'uuid';
 
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
-let channel: amqp.Channel | null = null;
+export let channel: amqp.Channel | null = null;
 
 async function connectRabbitMQ(retries = 5, delay = 5000) {
   try {
@@ -41,45 +42,42 @@ async function connectRabbitMQ(retries = 5, delay = 5000) {
   }
 }
 
-async function sendToQueue(queue: string, message: string) {
+async function sendToQueue(exchange: string, routingKey: string, message: string, correlationId: string, replyQueue: string) {
   if (!channel) {
     throw new Error("Channel is not connected to RabbitMQ");
   }
 
-  await channel.assertQueue(queue, { durable: false });
-  const sent = channel.sendToQueue(queue, Buffer.from(message));
-
-  if (sent) {
-    console.log("📤 Message sent to RabbitMQ Auth-Server:", message);
-  } else {
-    console.error("❌ Failed to send message to RabbitMQ");
-    throw new Error("Failed to send message to RabbitMQ");
-  }
+  await channel.assertExchange(exchange, 'direct', { durable: false });
+  channel.publish(exchange, routingKey, Buffer.from(message), {
+    correlationId,
+    replyTo: replyQueue,
+  });
+  console.log("📤 Message sent to RabbitMQ Exchange:", exchange, "Routing Key:", routingKey, "Message:", message);
 }
 
-async function receivedFromQueue(queue: string): Promise<string> {
+async function receivedFromQueue(queue: string, correlationId: string): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!channel) {
       return reject(new Error("Channel is not connected to RabbitMQ"));
     }
 
-    channel.assertQueue(queue, { durable: false }).then(() => {
+    channel.assertQueue(queue, { exclusive: true, autoDelete: true }).then(() => {
       if (!channel) {
         return reject(new Error("Channel is not connected to RabbitMQ"));
       }
 
       channel.consume(queue, (msg) => {
-        if (msg) {
-          const content = JSON.parse(msg.content.toString());
-          console.log("📩 Message received from RabbitMQ Auth-Server:", content);
+        if (msg && msg.properties.correlationId === correlationId) {
+          const content = msg.content.toString();
+          console.log("📩 Message received from RabbitMQ:", content);
 
-          if (content.message === "Unauthorized") {
-            console.log("1111111111111111111111111111");
-            return resolve("❌ Unauthorized User");
+          // Parse the content as JSON
+          try {
+            const parsedData = JSON.parse(content);
+            resolve(parsedData);
+          } catch (error) {
+            reject(new Error("Failed to parse message content"));
           }
-
-          console.log("2222222222222222222222222");
-          return resolve(content);
         }
       }, { noAck: true });
     }).catch(reject);

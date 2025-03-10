@@ -15,7 +15,7 @@ const router: Router = express.Router();
 router.get("/all-products", getAllProducts)
 router.get("/product/:id", getProductById)
 
-router.use(verifyAuth);
+// router.use(verifyAuth);
 
 router.post("/add-new-product", addNewProduct)
 router.put("edit-product/:id", editProductById)

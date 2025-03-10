@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
 let channel: amqp.Channel;
+
 async function connectRabbitMQ(retries = 5) {
     try {
         if (!RABBITMQ_URL) {
@@ -11,15 +12,22 @@ async function connectRabbitMQ(retries = 5) {
         const connection = await amqp.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
         console.log("✅ Connected to RabbitMQ Auth-Server");
-        const result = await channel.assertQueue('auth', { durable: false });
-        channel.consume('auth', async (msg) => {
+
+        const exchange = 'auth_exchange';
+        const routingKey = 'auth_routing_key';
+        const queue = 'auth';
+
+        await channel.assertExchange(exchange, 'direct', { durable: false });
+        await channel.assertQueue(queue, { durable: false });
+        await channel.bindQueue(queue, exchange, routingKey);
+
+        channel.consume(queue, async (msg) => {
             if (msg) {
-                console.log("📩 Message received from RabbitMQ Prodcut-Server:", msg.content.toString());
-                const response = await fetch(process.env.ENDPOINTAUTH + '/api/auth/check-user-auth')
-                const data = await response.json();
-                console.log("📤 Message sent to RabbitMQ Prodcut-Server:", data);
-                await channel.assertQueue('response', { durable: false });
-                channel.sendToQueue('response', Buffer.from(JSON.stringify(data)));
+                console.log("📩 Message received from RabbitMQ Auth-Server:", msg.content.toString());
+                const result = await CheckUserAuth();
+                const replyTo = msg.properties.replyTo;
+                const correlationId = msg.properties.correlationId;
+                channel.sendToQueue(replyTo, Buffer.from(JSON.stringify(result)), { correlationId });
             }
         }, { noAck: true });
     } catch (error) {
@@ -31,5 +39,26 @@ async function connectRabbitMQ(retries = 5) {
     }
 }
 
+async function sendToQueue(exchange: string, routingKey: string, message: string) {
+    if (!channel) {
+        throw new Error("Channel is not connected to RabbitMQ");
+    }
 
-export { connectRabbitMQ };
+    await channel.assertExchange(exchange, 'direct', { durable: false });
+    const sent = channel.publish(exchange, routingKey, Buffer.from(message));
+
+    if (sent) {
+        console.log(`📤 Message sent to RabbitMQ Exchange: ${exchange}, Routing Key: ${routingKey}, Message: ${message}`);
+    } else {
+        console.error("❌ Failed to send message to RabbitMQ");
+        throw new Error("Failed to send message to RabbitMQ");
+    }
+}
+
+async function CheckUserAuth() {
+    const response = await fetch(process.env.ENDPOINTAUTH + '/api/auth/check-user-auth');
+    const data = await response.json();
+    return data;
+}
+
+export { connectRabbitMQ, sendToQueue };
