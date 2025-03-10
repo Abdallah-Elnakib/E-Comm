@@ -57,7 +57,7 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
         
         req.session.refreshToken = REFRESH_TOKEN;
         
-        res.status(201).json({ ACCESS_TOKEN });
+        res.status(201).json({ ACCESS_TOKEN, REFRESH_TOKEN });
     
     } catch (error) {
 

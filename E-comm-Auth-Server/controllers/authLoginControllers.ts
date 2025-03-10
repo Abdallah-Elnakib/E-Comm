@@ -30,7 +30,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         
         req.session.refreshToken = REFRESH_TOKEN;
         
-        res.status(200).json({ ACCESS_TOKEN });
+        res.status(200).json({ ACCESS_TOKEN, REFRESH_TOKEN });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });

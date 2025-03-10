@@ -1,4 +1,11 @@
 import { Request, Response } from 'express';
+import session from 'express-session';
+
+declare module 'express-session' {
+    interface SessionData {
+        refreshToken: string;
+    }
+}
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -23,10 +30,13 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             res.status(response.status).json(errorData);
             return;
         }
+        
 
         const responseData = await response.json();
+        req.session.refreshToken = responseData.REFRESH_TOKEN;
         res.status(200).json(responseData);
         
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
