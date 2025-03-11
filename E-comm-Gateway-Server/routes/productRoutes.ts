@@ -4,6 +4,8 @@ import {getAllProducts} from '../controllers/Product-Server/getAllProductsContro
 import {getProductById} from '../controllers/Product-Server/getProductByIdControllers';
 import {editProductById} from '../controllers/Product-Server/editProductByIdControllers';
 import {deleteProductById} from '../controllers/Product-Server/deleteProductByIdControllers';
+import {undeleteProductById} from '../controllers/Product-Server/unDeleteProductByIdControllers';
+
 import {verifyJWT} from '../middleware/verifyJwt';
 
 const router: Router = express.Router();
@@ -17,7 +19,6 @@ router.use(verifyJWT);
 router.post("/add-new-product", addNewProduct)
 router.put("/edit-product/:id", editProductById)
 router.delete("/delete-product/:id", deleteProductById)
-
-
+router.patch("/undelete-product/:id", undeleteProductById)
 
 export default router;
