@@ -31,3 +31,4 @@ const connDB = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.connDB = connDB;
+connDB();

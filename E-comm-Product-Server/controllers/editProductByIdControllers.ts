@@ -27,6 +27,7 @@ export const editProductById = async (req: Request, res: Response): Promise<void
             }
             res.json({ message: 'Product updated successfully' });
             con.end();
+            return;
         });
     }
     catch (error) {

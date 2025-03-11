@@ -9,27 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = void 0;
-const userModel_1 = require("../models/userModel");
-const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    if (!id) {
-        res.status(400).json({ message: "All fields are required" });
-        return;
-    }
+exports.logout = void 0;
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const getUser = yield userModel_1.User.findById(id);
-        if (!getUser) {
-            res.status(401).json({ message: "Invalid ID" });
-            return;
-        }
-        res.status(200).json({ UserData: getUser });
-        return;
+        res.clearCookie('connect.sid');
+        res.status(200).json({ message: "Logout successful" });
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
-        return;
     }
 });
-exports.getUserById = getUserById;
+exports.logout = logout;

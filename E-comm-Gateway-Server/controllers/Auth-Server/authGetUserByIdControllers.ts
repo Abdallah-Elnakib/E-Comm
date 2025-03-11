@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { fetchAuthServerWithoutBody } from '../../utils/FetchAuthServer';
+import { fetchAnotherServerWithoutBody } from '../../utils/FetchAnotherServer';
 
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -8,7 +8,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
             res.status(400).json({ message: "User id is required" });
             return;
         }
-        const response = await fetchAuthServerWithoutBody(`${process.env.AUTHSERVER}/api/auth/user/${id}`, 'GET');
+        const response = await fetchAnotherServerWithoutBody(`${process.env.AUTHSERVER}/api/auth/user/${id}`, 'GET');
         console.log(response);
         if ('status' in response) {
             const responseData = await response.json();

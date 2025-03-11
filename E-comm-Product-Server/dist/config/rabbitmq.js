@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.channel = void 0;
 exports.connectRabbitMQ = connectRabbitMQ;
 exports.sendToQueue = sendToQueue;
 exports.receivedFromQueue = receivedFromQueue;
 exports.closeRabbitMQ = closeRabbitMQ;
 const amqplib_1 = __importDefault(require("amqplib"));
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
-let channel = null;
+exports.channel = null;
 function connectRabbitMQ() {
     return __awaiter(this, arguments, void 0, function* (retries = 5, delay = 5000) {
         try {
@@ -26,7 +27,7 @@ function connectRabbitMQ() {
                 throw new Error("RABBITMQ_URL is not defined");
             }
             const connection = yield amqplib_1.default.connect(RABBITMQ_URL);
-            channel = yield connection.createChannel();
+            exports.channel = yield connection.createChannel();
             console.log("✅ Connected to RabbitMQ Product-Server");
             connection.on('close', () => {
                 console.error("❌ RabbitMQ connection closed. Reconnecting...");
@@ -59,42 +60,41 @@ function connectRabbitMQ() {
         }
     });
 }
-function sendToQueue(queue, message) {
+function sendToQueue(exchange, routingKey, message, correlationId, replyQueue) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!channel) {
+        if (!exports.channel) {
             throw new Error("Channel is not connected to RabbitMQ");
         }
-        yield channel.assertQueue(queue, { durable: false });
-        const sent = channel.sendToQueue(queue, Buffer.from(message));
-        if (sent) {
-            console.log("📤 Message sent to RabbitMQ Auth-Server:", message);
-        }
-        else {
-            console.error("❌ Failed to send message to RabbitMQ");
-            throw new Error("Failed to send message to RabbitMQ");
-        }
+        yield exports.channel.assertExchange(exchange, 'direct', { durable: false });
+        exports.channel.publish(exchange, routingKey, Buffer.from(message), {
+            correlationId,
+            replyTo: replyQueue,
+        });
+        console.log("📤 Message sent to RabbitMQ Exchange:", exchange, "Routing Key:", routingKey, "Message:", message);
     });
 }
-function receivedFromQueue(queue) {
+function receivedFromQueue(queue, correlationId) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            if (!channel) {
+            if (!exports.channel) {
                 return reject(new Error("Channel is not connected to RabbitMQ"));
             }
-            channel.assertQueue(queue, { durable: false }).then(() => {
-                if (!channel) {
+            exports.channel.assertQueue(queue, { exclusive: true, autoDelete: true }).then(() => {
+                if (!exports.channel) {
                     return reject(new Error("Channel is not connected to RabbitMQ"));
                 }
-                channel.consume(queue, (msg) => {
-                    if (msg) {
-                        const content = JSON.parse(msg.content.toString());
-                        console.log("📩 Message received from RabbitMQ Auth-Server:", content);
-                        if (content.message === "Unauthorized") {
-                            console.log("1111111111111111111111111111");
-                            return resolve("❌ Unauthorized User");
+                exports.channel.consume(queue, (msg) => {
+                    if (msg && msg.properties.correlationId === correlationId) {
+                        const content = msg.content.toString();
+                        console.log("📩 Message received from RabbitMQ:", content);
+                        // Parse the content as JSON
+                        try {
+                            const parsedData = JSON.parse(content);
+                            resolve(parsedData);
                         }
-                        console.log("2222222222222222222222222");
-                        return resolve(content);
+                        catch (error) {
+                            reject(new Error("Failed to parse message content"));
+                        }
                     }
                 }, { noAck: true });
             }).catch(reject);
@@ -103,9 +103,9 @@ function receivedFromQueue(queue) {
 }
 function closeRabbitMQ() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (channel) {
-            yield channel.close();
-            channel = null;
+        if (exports.channel) {
+            yield exports.channel.close();
+            exports.channel = null;
             console.log("✅ RabbitMQ connection closed");
         }
     });

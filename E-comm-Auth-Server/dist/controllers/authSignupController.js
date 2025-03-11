@@ -63,8 +63,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
         const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userId: user._id, role: user.position }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
-        req.session.refreshToken = REFRESH_TOKEN;
-        res.status(201).json({ ACCESS_TOKEN });
+        res.status(201).json({ ACCESS_TOKEN, REFRESH_TOKEN });
     }
     catch (error) {
         if (error instanceof zod_1.z.ZodError) {

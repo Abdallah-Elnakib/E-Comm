@@ -9,27 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = void 0;
-const userModel_1 = require("../models/userModel");
-const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    if (!id) {
-        res.status(400).json({ message: "All fields are required" });
-        return;
-    }
+exports.getAllAddress = void 0;
+const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
+const getAllAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const getUser = yield userModel_1.User.findById(id);
-        if (!getUser) {
-            res.status(401).json({ message: "Invalid ID" });
+        const { user_id } = req.params;
+        if (!user_id) {
+            res.status(400).json({ message: "User id is required" });
             return;
         }
-        res.status(200).json({ UserData: getUser });
-        return;
+        const response = yield (0, FetchAnotherServer_1.fetchAnotherServerWithoutBody)(`${process.env.AUTHSERVER}/api/auth/address/get-all/${user_id}`, 'GET');
+        if ('status' in response) {
+            const responseData = yield response.json();
+            res.status(response.status).json(responseData);
+            return;
+        }
+        else {
+            res.status(500).json({ message: "Error from auth server" });
+        }
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
-        return;
     }
 });
-exports.getUserById = getUserById;
+exports.getAllAddress = getAllAddress;

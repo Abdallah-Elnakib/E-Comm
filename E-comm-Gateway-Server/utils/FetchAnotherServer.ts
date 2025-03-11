@@ -1,5 +1,5 @@
 
-export const fetchAuthServer = async (url: string, method: string, body: any) => {
+export const fetchAnotherServer = async (url: string, method: string, body: any) => {
     try {
         const response = await fetch(url, {
             method,
@@ -18,7 +18,7 @@ export const fetchAuthServer = async (url: string, method: string, body: any) =>
 };
 
 
-export const fetchAuthServerWithoutBody = async (url: string, method: string) => {
+export const fetchAnotherServerWithoutBody = async (url: string, method: string) => {
     try {
         const response = await fetch(url, {
             method,

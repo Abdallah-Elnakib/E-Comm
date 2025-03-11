@@ -1,18 +1,22 @@
 import { Request, Response } from 'express';
-import { fetchAnotherServerWithoutBody } from '../../utils/FetchAnotherServer';
+import { fetchAnotherServer } from '../../utils/FetchAnotherServer';
 
-export const getAllAddress = async (req: Request, res: Response): Promise<void> => {
+export const deleteAddressByAddressNumber = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {user_id} = req.params;
+        const { user_id } = req.params;
+        const { addressNumber } = req.body;
+        if (!addressNumber) {
+            res.status(400).json({ message: "Address number is required" });
+            return;
+        }
         if (!user_id) {
             res.status(400).json({ message: "User id is required" });
             return;
         }
-        const response = await fetchAnotherServerWithoutBody(`${process.env.AUTHSERVER}/api/auth/address/get-all/${user_id}`, 'GET');
+        const response = await fetchAnotherServer(`${process.env.AUTHSERVER}/api/auth/address/delete/${user_id}`, 'DELETE', {addressNumber});
         if ('status' in response) {
             const responseData = await response.json();
             res.status(response.status).json(responseData);
-            return;
         } else {
             res.status(500).json({ message: "Error from auth server" });
         }
@@ -21,4 +25,4 @@ export const getAllAddress = async (req: Request, res: Response): Promise<void> 
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};

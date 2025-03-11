@@ -9,27 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = void 0;
-const userModel_1 = require("../models/userModel");
-const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    if (!id) {
-        res.status(400).json({ message: "All fields are required" });
-        return;
-    }
+exports.deleteProductById = void 0;
+const deleteProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const getUser = yield userModel_1.User.findById(id);
-        if (!getUser) {
-            res.status(401).json({ message: "Invalid ID" });
-            return;
+        const { id } = req.params;
+        const response = yield fetch(`${process.env.PRODUCTSERVER}/api/products/delete-product/${id}`, {
+            method: 'DELETE',
+        });
+        const contentType = response.headers.get('content-type');
+        let responseBody;
+        if (contentType && contentType.includes('application/json')) {
+            responseBody = yield response.json();
         }
-        res.status(200).json({ UserData: getUser });
-        return;
+        else {
+            responseBody = yield response.text();
+        }
+        res.status(response.status).json(responseBody);
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
-        return;
     }
 });
-exports.getUserById = getUserById;
+exports.deleteProductById = deleteProductById;

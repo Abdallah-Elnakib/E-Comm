@@ -5,14 +5,22 @@ export const updateAddress = async (req: Request, res: Response): Promise<void> 
     const {user_id} = req.params;
     const {addressNumber, address} = req.body;
     try {
-        const user = await User.findById({ _id: user_id });
-        if (!user) {
-            res.status(401).json({ message: "Invalid User ID" });
+        if (!user_id) {
+            res.status(400).json({ message: "User id is required" });
+            return;
+        }
+        if (!addressNumber || !address) {
+            res.status(400).json({ message: "Address number and address are required" });
             return;
         }
         const { street, city, state, zip } = address;
         if (!street || !city || !state || !zip) {
             res.status(400).json({ message: "All address fields are required" });
+            return;
+        }
+        const user = await User.findById({ _id: user_id });
+        if (!user) {
+            res.status(401).json({ message: "Invalid User ID" });
             return;
         }
         const addressIndex = addressNumber - 1;

@@ -17,7 +17,6 @@ const authResendOtpControllers_1 = require("../controllers/authResendOtpControll
 const authVerifyOtpControllers_1 = require("../controllers/authVerifyOtpControllers");
 const authForgotPasswordControllers_1 = require("../controllers/authForgotPasswordControllers");
 const authResetPasswordControllers_1 = require("../controllers/authResetPasswordControllers");
-const verifyJWT_1 = require("../middleware/verifyJWT");
 const authCheckUserControllers_1 = require("../controllers/authCheckUserControllers");
 const router = express_1.default.Router();
 router.post('/login', authLoginControllers_1.loginUser);
@@ -26,7 +25,7 @@ router.get('/logout', authLogoutControllers_1.logout);
 router.get('/check-user-auth', authCheckUserControllers_1.checkUser);
 router.post("/forgot-password", authForgotPasswordControllers_1.forgotPassword);
 router.post("/reset-password", authResetPasswordControllers_1.resetPassword);
-router.use(verifyJWT_1.verifyJWT);
+// router.use(verifyJWT);
 router.get('/user/:id', authGetUserByIdControllers_1.getUserById);
 router.get('/address/get-all/:user_id', authGetAllAddressController_1.getAllAddress);
 router.delete('/address/delete/:user_id', authDeleteAddressByAddressNumberControllers_1.deleteAddressById);

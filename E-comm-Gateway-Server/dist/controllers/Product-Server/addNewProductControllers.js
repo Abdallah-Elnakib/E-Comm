@@ -9,27 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = void 0;
-const userModel_1 = require("../models/userModel");
-const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    if (!id) {
-        res.status(400).json({ message: "All fields are required" });
-        return;
-    }
+exports.addNewProduct = void 0;
+const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
+const addNewProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const getUser = yield userModel_1.User.findById(id);
-        if (!getUser) {
-            res.status(401).json({ message: "Invalid ID" });
+        const { title, description, category, price, stock } = req.body;
+        if (!title || !price || !description || !category || !stock) {
+            res.status(400).json({ message: "All fields are required" });
             return;
         }
-        res.status(200).json({ UserData: getUser });
-        return;
+        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.PRODUCTSERVER}/api/products/add-new-product`, 'POST', { title, description, category, price, stock });
+        if ('status' in response) {
+            const responseData = yield response.json();
+            res.status(response.status).json(responseData);
+        }
+        else {
+            res.status(500).json({ message: "Error from product server" });
+        }
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
-        return;
     }
 });
-exports.getUserById = getUserById;
+exports.addNewProduct = addNewProduct;

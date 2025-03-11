@@ -50,6 +50,7 @@ const userSchema = new mongoose_1.default.Schema({
     },
     resetPasswordToken: {
         type: String,
+        createdAt: { type: Date, default: Date.now, expires: '10m' }
     }
 }, {
     timestamps: true

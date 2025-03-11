@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { fetchAuthServer } from '../../utils/FetchAuthServer';
+import { fetchAnotherServer } from '../../utils/FetchAnotherServer';
 
 export const signupUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -17,7 +17,7 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
             addresses,
             password
         };  
-        const response = await fetchAuthServer(`${process.env.AUTHSERVER}/api/auth/signup`, 'POST', data);
+        const response = await fetchAnotherServer(`${process.env.AUTHSERVER}/api/auth/signup`, 'POST', data);
 
         if ('status' in response) {
             const responseData = await response.json();

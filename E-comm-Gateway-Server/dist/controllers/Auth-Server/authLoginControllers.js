@@ -13,9 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const userModel_1 = require("../models/userModel");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
@@ -23,20 +22,22 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(400).json({ message: "Email and password are required" });
             return;
         }
-        const user = yield userModel_1.User.findOne({ email });
-        if (!user || !user.password) {
-            res.status(401).json({ message: "Invalid email or password" });
+        const data = { email, password };
+        const response = yield fetch(`${process.env.AUTHSERVER}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            const errorData = yield response.json();
+            res.status(response.status).json(errorData);
             return;
         }
-        const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
-        if (!isPasswordValid) {
-            res.status(401).json({ message: "Invalid email or password" });
-            return;
-        }
-        const ACCESS_TOKEN = jsonwebtoken_1.default.sign({ userInfo: { userId: user._id, role: user.position } }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
-        const REFRESH_TOKEN = jsonwebtoken_1.default.sign({ userInfo: { userId: user._id, role: user.position } }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
-        req.session.refreshToken = REFRESH_TOKEN;
-        res.status(200).json({ ACCESS_TOKEN, REFRESH_TOKEN });
+        const responseData = yield response.json();
+        req.session.refreshToken = responseData.REFRESH_TOKEN;
+        res.status(200).json(responseData);
     }
     catch (error) {
         console.error(error);

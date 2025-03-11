@@ -18,7 +18,7 @@ router.get("/product/:id", getProductById)
 // router.use(verifyAuth);
 
 router.post("/add-new-product", addNewProduct)
-router.put("edit-product/:id", editProductById)
+router.put("/edit-product/:id", editProductById)
 router.delete("/delete-product/:id", deleteProductById)
 
 
