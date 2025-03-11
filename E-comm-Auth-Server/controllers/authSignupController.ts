@@ -55,7 +55,6 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
         const ACCESS_TOKEN = jwt.sign({ userId: user._id, role: user.position }, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "15m" });
         const REFRESH_TOKEN = jwt.sign({ userId: user._id, role: user.position }, process.env.REFRESH_TOKEN_SECRET as string, { expiresIn: "7d" });
         
-        req.session.refreshToken = REFRESH_TOKEN;
         
         res.status(201).json({ ACCESS_TOKEN, REFRESH_TOKEN });
     

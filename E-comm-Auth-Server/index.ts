@@ -30,7 +30,7 @@ mongoose.connection.once('open', () => {
     app.listen(port, () => {
         console.log(`🚀 Auth-Server is running on port ${port}...........`);
     });
-    connectRabbitMQ();
+    // connectRabbitMQ();
 });
 
 

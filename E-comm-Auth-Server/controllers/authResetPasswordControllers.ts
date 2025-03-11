@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { User } from '../models/userModel';
 import jwt from 'jsonwebtoken';
-
+import bcrypt from 'bcrypt';
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
     try {
         const {token} = req.query;
@@ -28,8 +28,9 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
                 return;
             }
         });
+        const hashPassword = await bcrypt.hash(newassword, 10);
 
-        user.password = newassword;
+        user.password = hashPassword;
         user.resetPasswordToken = undefined;
         await user.save();
         res.status(200).json({ message: "Password reset successfully" });

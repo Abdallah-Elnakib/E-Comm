@@ -14,9 +14,11 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
             return;
         }
         res.status(200).json({ UserData: getUser });
+        return;
         
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
+        return;
     }
 };

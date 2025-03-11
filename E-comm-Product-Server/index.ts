@@ -17,7 +17,7 @@ app.use('/api/products', productRoutes);
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`🚀 Product-Server is running on port ${process.env.PORT}...........`);
-    connectRabbitMQ();
+    // connectRabbitMQ();
 });
 
 

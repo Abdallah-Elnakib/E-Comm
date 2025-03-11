@@ -25,7 +25,7 @@ router.get('/check-user-auth', checkUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
-router.use(verifyJWT);
+// router.use(verifyJWT);
 
 router.get('/user/:id', getUserById);
 
