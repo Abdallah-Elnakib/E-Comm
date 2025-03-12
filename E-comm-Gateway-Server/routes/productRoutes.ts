@@ -5,6 +5,7 @@ import {getProductById} from '../controllers/Product-Server/getProductByIdContro
 import {editProductById} from '../controllers/Product-Server/editProductByIdControllers';
 import {deleteProductById} from '../controllers/Product-Server/deleteProductByIdControllers';
 import {undeleteProductById} from '../controllers/Product-Server/unDeleteProductByIdControllers';
+import {getProductRating} from '../controllers/Product-Server/getProductRatingControllers';
 
 import {verifyJWT} from '../middleware/verifyJwt';
 
@@ -20,5 +21,8 @@ router.post("/add-new-product", addNewProduct)
 router.put("/edit-product/:id", editProductById)
 router.delete("/delete-product/:id", deleteProductById)
 router.patch("/undelete-product/:id", undeleteProductById)
+
+router.get('/product/rating/:id', getProductRating)
+
 
 export default router;

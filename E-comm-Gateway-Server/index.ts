@@ -6,6 +6,7 @@ import cors from 'cors';
 import auth from './routes/authRoutes';
 import product from './routes/productRoutes';
 import session from 'express-session';
+import reviewRoutes from './routes/reviewsRoutes';
 
 const app: Express = express();
 
@@ -21,6 +22,7 @@ app.use(session({
 
 app.use('/api/auth', auth);
 app.use('/api/product', product);
+app.use('/api/reviews', reviewRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`🚀 Gateway-Server started at http://localhost:${process.env.PORT}............`);
