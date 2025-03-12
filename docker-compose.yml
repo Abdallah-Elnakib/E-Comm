@@ -17,6 +17,15 @@ services:
     depends_on:
       - mysql
 
+  order-service:
+    build: ./E-comm-Order-Server
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./E-comm-Order-Server/.env
+    depends_on:
+      - mysql
+
   gateway-service:
     build: ./E-comm-Gateway-Server
     ports:
