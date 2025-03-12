@@ -10,6 +10,7 @@ const connDB = async (): Promise<mysql.Connection> => {
             database : process.env.MYSQL_DATABASE
         });
         return con;
+        
     } catch (error) {
         console.log(error);
         throw error;

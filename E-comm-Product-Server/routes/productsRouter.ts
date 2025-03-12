@@ -6,6 +6,7 @@ import {editProductById} from '../controllers/editProductByIdControllers';
 import {deleteProductById} from '../controllers/deleteProductByIdControllers';
 import {undeleteProductById} from '../controllers/unDeleteProductByIdControllers';
 
+
 const router: Router = express.Router();
 
 
@@ -15,12 +16,10 @@ const router: Router = express.Router();
 router.get("/all-products", getAllProducts)
 router.get("/product/:id", getProductById)
 
-
 router.post("/add-new-product", addNewProduct)
 router.put("/edit-product/:id", editProductById)
 router.delete("/delete-product/:id", deleteProductById)
 router.patch("/undelete-product/:id", undeleteProductById)
-
 
 export default router;
 

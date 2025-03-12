@@ -20,6 +20,7 @@
     "express": "^4.21.2",
     "mongoose": "^8.11.0",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
     "redis": "^4.7.0",
     "typescript": "^5.8.2",
@@ -29,6 +30,7 @@
     "@types/amqplib": "^0.10.7",
     "@types/cors": "^2.8.17",
     "@types/mysql": "^2.15.26",
+    "@types/nodemailer": "^6.4.17",
     "@types/uuid": "^10.0.0"
   }
 }
