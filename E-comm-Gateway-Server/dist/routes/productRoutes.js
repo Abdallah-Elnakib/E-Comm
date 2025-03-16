@@ -9,6 +9,8 @@ const getAllProductsControllers_1 = require("../controllers/Product-Server/getAl
 const getProductByIdControllers_1 = require("../controllers/Product-Server/getProductByIdControllers");
 const editProductByIdControllers_1 = require("../controllers/Product-Server/editProductByIdControllers");
 const deleteProductByIdControllers_1 = require("../controllers/Product-Server/deleteProductByIdControllers");
+const unDeleteProductByIdControllers_1 = require("../controllers/Product-Server/unDeleteProductByIdControllers");
+const getProductRatingControllers_1 = require("../controllers/Product-Server/getProductRatingControllers");
 const verifyJwt_1 = require("../middleware/verifyJwt");
 const router = express_1.default.Router();
 router.get("/all-products", getAllProductsControllers_1.getAllProducts);
@@ -17,4 +19,6 @@ router.use(verifyJwt_1.verifyJWT);
 router.post("/add-new-product", addNewProductControllers_1.addNewProduct);
 router.put("/edit-product/:id", editProductByIdControllers_1.editProductById);
 router.delete("/delete-product/:id", deleteProductByIdControllers_1.deleteProductById);
+router.patch("/undelete-product/:id", unDeleteProductByIdControllers_1.undeleteProductById);
+router.get('/product/rating/:id', getProductRatingControllers_1.getProductRating);
 exports.default = router;

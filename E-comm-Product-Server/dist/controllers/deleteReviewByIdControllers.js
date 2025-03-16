@@ -9,47 +9,45 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProductById = void 0;
+exports.deleteReviewById = void 0;
 const connDB_1 = require("../config/connDB");
-const connRedisServer_1 = require("../config/connRedisServer");
-const deleteProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteReviewById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const con = yield (0, connDB_1.connDB)();
-        const id = req.params.id;
-        con.query('SELECT * FROM Product WHERE Id = ?', [id], (err, results) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        if (!id) {
+            res.status(400).json({ message: "Review id is required" });
+            return;
+        }
+        con.query('SELECT * FROM reviews WHERE Id = ?', [id], (err, results) => {
             if (err) {
-                console.error("Error fetching product: ", err);
+                console.error("Error fetching review: ", err);
                 res.status(500).json({ message: 'Internal server error' });
                 con.end();
                 return;
             }
             if (results.length === 0) {
-                res.status(404).json({ message: 'Product not found' });
+                res.status(404).json({ message: 'Review not found' });
                 con.end();
                 return;
             }
-            const product = results[0];
-            yield connRedisServer_1.client.set(`product:${id}`, JSON.stringify(product), {
-                EX: 86400,
-            });
-            console.log(`Product with ID ${id} saved in Redis for 24 hours`);
-            con.query('DELETE FROM Product WHERE Id = ?', [id], (err, results) => {
+            con.query('DELETE FROM reviews WHERE Id = ?', [id], (err, results) => {
                 if (err) {
-                    console.error("Error deleting product: ", err);
+                    console.error("Error deleting review: ", err);
                     res.status(500).json({ message: 'Internal server error' });
                     con.end();
                     return;
                 }
-                res.json({ message: `Product deleted successfully` });
+                res.status(200).json({ message: 'Review deleted successfully' });
                 con.end();
                 return;
             });
-        }));
+        });
     }
     catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error("Database connection failed: ", error);
+        res.status(500).json({ message: "Internal server error" });
         return;
     }
 });
-exports.deleteProductById = deleteProductById;
+exports.deleteReviewById = deleteReviewById;
