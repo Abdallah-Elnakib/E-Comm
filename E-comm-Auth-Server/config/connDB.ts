@@ -13,5 +13,6 @@ const connDB = async (): Promise<void> => {
         console.error("Database connection failed:", error);
     }
 };
+// test
 
 export { connDB };
