@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { User } from '../models/userModel';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
     try {
         const {token} = req.query;

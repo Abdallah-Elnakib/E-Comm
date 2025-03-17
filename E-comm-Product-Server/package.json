@@ -17,6 +17,7 @@
     "amqplib": "^0.10.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "e-comm-product-server": "file:",
     "express": "^4.21.2",
     "mongoose": "^8.11.0",
     "mysql": "^2.18.1",
