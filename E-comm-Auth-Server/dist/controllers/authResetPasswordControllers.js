@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetPassword = void 0;
 const userModel_1 = require("../models/userModel");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { token } = req.query;
@@ -39,7 +39,7 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 return;
             }
         });
-        const hashPassword = yield bcrypt_1.default.hash(newassword, 10);
+        const hashPassword = yield bcryptjs_1.default.hash(newassword, 10);
         user.password = hashPassword;
         user.resetPasswordToken = undefined;
         yield user.save();

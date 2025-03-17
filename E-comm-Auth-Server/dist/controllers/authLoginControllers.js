@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = require("../models/userModel");
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -28,7 +28,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.status(401).json({ message: "Invalid email or password" });
             return;
         }
-        const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
+        const isPasswordValid = yield bcryptjs_1.default.compare(password, user.password);
         if (!isPasswordValid) {
             res.status(401).json({ message: "Invalid email or password" });
             return;

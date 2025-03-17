@@ -18,6 +18,7 @@
     "dotenv": "^16.4.7",
     "e-comm-order-server": "file:",
     "express": "^4.21.2",
+    "firebase": "^11.4.0",
     "nodemon": "^3.1.9",
     "typescript": "^5.8.2"
   },

@@ -12,15 +12,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+exports.connDB = void 0;
+const app_1 = require("firebase/app");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const cors_1 = __importDefault(require("cors"));
-const connDB_1 = require("./config/connDB");
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use((0, cors_1.default)());
-app.listen(process.env.PORT || 6000, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`🚀 Order-Server is running on port ${process.env.PORT}...........`);
-    yield (0, connDB_1.connDB)();
-}));
+const connDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const firebaseConfig = {
+        apiKey: process.env.APIKEY,
+        authDomain: process.env.AUTHDOMAIN,
+        projectId: process.env.PROJECTID,
+        storageBucket: process.env.STORAGEBUCKET,
+        messagingSenderId: process.env.MESSAGINGSENDERID,
+        appId: process.env.APPID,
+        measurementId: process.env.MEASUREMENTID
+    };
+    let app;
+    if (!(0, app_1.getApps)().length) {
+        app = (0, app_1.initializeApp)(firebaseConfig);
+    }
+    else {
+        app = (0, app_1.getApps)()[0];
+    }
+    console.log("DataBase Firebase Connected.........");
+    return app;
+});
+exports.connDB = connDB;

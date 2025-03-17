@@ -20,11 +20,11 @@ services:
   order-service:
     build: ./E-comm-Order-Server
     ports:
-      - "8081:8080"
+      - "6000:6000"
     env_file:
       - ./E-comm-Order-Server/.env
     depends_on:
-      - mysql
+      - firebase
 
   gateway-service:
     build: ./E-comm-Gateway-Server
@@ -79,6 +79,20 @@ services:
     command: ["redis-server", "--requirepass", "@Bdallh1722"]
     volumes:
       - redis-data:/data
+
+  firebase:
+    image: codechimp/firebase-tools
+    container_name: firebase
+    ports:
+      - "4000:4000"
+      - "8085:8085"
+      - "5001:5001"
+      - "9000:9000"
+      - "9099:9099"
+    volumes:
+      - ./firebase:/firebase
+    command: >
+      sh -c "firebase emulators:start --project your-project-id --only firestore,auth,functions"
 
 volumes:
   mongo-data:
