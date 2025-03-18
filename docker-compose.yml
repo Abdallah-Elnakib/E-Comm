@@ -68,7 +68,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: admins
       RABBITMQ_DEFAULT_PASS: admin
-  
+
   redis:
     image: "redis:alpine"
     container_name: "redis"
@@ -81,7 +81,7 @@ services:
       - redis-data:/data
 
   firebase:
-    image: codechimp/firebase-tools
+    image: node:18  # Use Node.js v18
     container_name: firebase
     ports:
       - "4000:4000"
@@ -91,10 +91,12 @@ services:
       - "9099:9099"
     volumes:
       - ./firebase:/firebase
+    working_dir: /firebase
     command: >
-      sh -c "firebase emulators:start --project your-project-id --only firestore,auth,functions"
+      sh -c "npm install -g firebase-tools && firebase emulators:start --project your-project-id --only firestore,auth,functions"
 
 volumes:
   mongo-data:
   mysql-data:
   redis-data:
+  firebase:
