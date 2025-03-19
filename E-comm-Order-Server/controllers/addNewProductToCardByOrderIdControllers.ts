@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../config/connDB';
-import { orderSchema, Order} from '../models/orderSchema';
+import { orderSchema, Order, productsShema} from '../models/orderSchema';
 import { collection, doc, getDoc, getDocs, updateDoc ,query, where, documentId} from 'firebase/firestore';
 
 export const addNewProductToCardByOrderId = async (req: Request, res: Response) => {
@@ -20,8 +20,7 @@ export const addNewProductToCardByOrderId = async (req: Request, res: Response) 
         
         let total = quantity * price;
 
-        const productSchema = orderSchema.shape.products;
-        const validation = productSchema.safeParse({ productId, quantity, price, total });
+        const validation = productsShema.safeParse({ productId, quantity, price, total });
         if (!validation.success) {
             res.status(400).json({ message: validation.error.errors[0].message });
             return;
@@ -45,6 +44,14 @@ export const addNewProductToCardByOrderId = async (req: Request, res: Response) 
             return;
         }
 
+        if (orderData.products) {
+            for (let i = 0; i < orderData.products.length; i++) {
+                if (orderData.products[i].productId === productId) {
+                    res.status(400).json({ message: 'Product already exists in the cart' });
+                    return;
+                }
+            }
+        }
         const updatedProducts = [...(orderData.products || []), {
             productId,
             quantity,

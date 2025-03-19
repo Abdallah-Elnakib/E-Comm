@@ -9,26 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewProductToCardByOrderId = void 0;
+exports.removeFromCard = void 0;
 const connDB_1 = require("../config/connDB");
-const orderSchema_1 = require("../models/orderSchema");
 const firestore_1 = require("firebase/firestore");
-const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const removeFromCard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { OrderId } = req.params;
-        const { productId, quantity, price } = req.body;
+        const { productId } = req.body;
         if (!OrderId) {
             res.status(400).json({ message: 'Order ID is required' });
             return;
         }
-        if (!productId || !quantity || !price) {
-            res.status(400).json({ message: 'Product ID, quantity, and price are required' });
-            return;
-        }
-        let total = quantity * price;
-        const validation = orderSchema_1.productsShema.safeParse({ productId, quantity, price, total });
-        if (!validation.success) {
-            res.status(400).json({ message: validation.error.errors[0].message });
+        if (!productId) {
+            res.status(400).json({ message: 'Product ID is required' });
             return;
         }
         const ordersCollection = (0, firestore_1.collection)(connDB_1.db, 'orders');
@@ -38,35 +31,38 @@ const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, voi
             res.status(404).json({ message: 'Order not found' });
             return;
         }
-        const orderData = querySnapshot.docs[0].data();
+        const orderDoc = querySnapshot.docs[0];
+        const orderData = orderDoc.data();
         if (orderData.orderStatus !== 'created') {
             res.status(400).json({ message: 'Order is not in the "created" state' });
             return;
         }
-        if (orderData.products) {
+        if (orderData.products.length > 0) {
             for (let i = 0; i < orderData.products.length; i++) {
                 if (orderData.products[i].productId === productId) {
-                    res.status(400).json({ message: 'Product already exists in the cart' });
+                    orderData.products.splice(i, 1);
+                    yield (0, firestore_1.updateDoc)(orderDoc.ref, { products: orderData.products });
+                    let totalAfterRemove = 0;
+                    for (let i = 0; i < orderData.products.length; i++) {
+                        totalAfterRemove += orderData.products[i].total;
+                    }
+                    orderData.total = totalAfterRemove;
+                    yield (0, firestore_1.updateDoc)(orderDoc.ref, { total: orderData.total });
+                    res.status(200).json({ message: 'Product removed from the card successfully' });
                     return;
                 }
             }
+            res.status(404).json({ message: 'Product not found in the card' });
+            return;
         }
-        const updatedProducts = [...(orderData.products || []), {
-                productId,
-                quantity,
-                price,
-                total,
-            }];
-        const totalAfterCal = (orderData.total || 0) + (total || 0);
-        yield (0, firestore_1.updateDoc)((0, firestore_1.doc)(connDB_1.db, 'orders', OrderId), {
-            products: updatedProducts,
-            total: totalAfterCal,
-        });
-        res.status(200).json({ message: 'Product added to cart successfully' });
+        else {
+            res.status(404).json({ message: 'No Products Found In The Card' });
+            return;
+        }
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-exports.addNewProductToCardByOrderId = addNewProductToCardByOrderId;
+exports.removeFromCard = removeFromCard;

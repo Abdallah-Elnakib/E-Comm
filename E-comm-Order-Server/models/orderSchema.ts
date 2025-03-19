@@ -16,4 +16,11 @@ export const orderSchema = z.object({
     total: z.number().min(0, "Total must be a positive number").optional(),
 });
 
+export const productsShema = z.object({
+    productId: z.number().min(1, "Product ID is required"),
+    quantity: z.number().min(1, "Quantity must be at least 1"),
+    price: z.number().min(0, "Price must be a positive number"),
+    total: z.number().min(0, "Total must be a positive number").optional(),
+});
+
 export type Order = z.infer<typeof orderSchema>;
