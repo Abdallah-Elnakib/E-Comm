@@ -1,6 +1,5 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
-import { getAnalytics, isSupported } from "firebase/analytics";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -21,13 +20,7 @@ if (!getApps().length) {
     app = initializeApp(firebaseConfig);
     db = getFirestore(app);
 
-    isSupported().then((supported) => {
-        if (supported) {
-            getAnalytics(app);
-        } else {
-            console.log('Firebase Analytics is not supported in this environment.');
-        }
-    });
+    
 } else {
     app = getApps()[0];
     db = getFirestore(app);

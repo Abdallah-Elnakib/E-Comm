@@ -16,11 +16,13 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const cors_1 = __importDefault(require("cors"));
-const connDB_1 = require("./config/connDB");
+const orderRoutes_1 = __importDefault(require("./routes/orderRoutes"));
+// import {connDB} from './config/connDB';
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
+app.use('/api/orders', orderRoutes_1.default);
 app.listen(process.env.PORT || 6000, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`🚀 Order-Server is running on port ${process.env.PORT}...........`);
-    yield (0, connDB_1.connDB)();
+    // await connDB();
 }));
