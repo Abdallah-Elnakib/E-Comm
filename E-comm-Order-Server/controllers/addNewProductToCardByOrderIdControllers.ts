@@ -6,34 +6,34 @@ import { collection, doc, getDoc, getDocs, updateDoc ,query, where, documentId} 
 export const addNewProductToCardByOrderId = async (req: Request, res: Response) => {
     try {
         const { OrderId } = req.params;
-        const { product } = req.body;
+        const { productId, quantity, price } = req.body;
 
         if (!OrderId) {
             res.status(400).json({ message: 'Order ID is required' });
             return;
         }
 
-        if (!product) {
-            res.status(400).json({ message: 'Product is required' });
+        if (!productId || !quantity || !price) {
+            res.status(400).json({ message: 'Product ID, quantity, and price are required' });
             return;
         }
+        
+        let total = quantity * price;
 
         const productSchema = orderSchema.shape.products;
-        const validation = productSchema.safeParse(product);
+        const validation = productSchema.safeParse({ productId, quantity, price, total });
         if (!validation.success) {
             res.status(400).json({ message: validation.error.errors[0].message });
             return;
         }
 
 
-        product.total = product.quantity * product.price;
-
         const ordersCollection = collection(db, 'orders');
         const orderQuery = query(ordersCollection, where(documentId(), '==', OrderId));
-        
+
         const querySnapshot = await getDocs(orderQuery);
 
-        if (!querySnapshot.empty) {
+        if (querySnapshot.empty) {
             res.status(404).json({ message: 'Order not found' });
             return;
         }
@@ -45,8 +45,13 @@ export const addNewProductToCardByOrderId = async (req: Request, res: Response) 
             return;
         }
 
-        const updatedProducts = [...(orderData.products || []), product];
-        const totalAfterCal = (orderData.total || 0) + product.total;
+        const updatedProducts = [...(orderData.products || []), {
+            productId,
+            quantity,
+            price,
+            total,
+        }];
+        const totalAfterCal = (orderData.total || 0) + (total || 0);
 
         await updateDoc(doc(db, 'orders', OrderId), {
             products: updatedProducts,

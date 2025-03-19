@@ -11,31 +11,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addNewProductToCardByOrderId = void 0;
 const connDB_1 = require("../config/connDB");
-const orderSchema_1 = require("../models/orderSchema");
 const firestore_1 = require("firebase/firestore");
 const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { OrderId } = req.params;
-        const { product } = req.body;
+        const { productId, quantity, price } = req.body;
         if (!OrderId) {
             res.status(400).json({ message: 'Order ID is required' });
             return;
         }
-        if (!product) {
-            res.status(400).json({ message: 'Product is required' });
+        if (!productId || !quantity || !price) {
+            res.status(400).json({ message: 'Product ID, quantity, and price are required' });
             return;
         }
-        const productSchema = orderSchema_1.orderSchema.shape.products;
-        const validation = productSchema.safeParse(product);
-        if (!validation.success) {
-            res.status(400).json({ message: validation.error.errors[0].message });
-            return;
-        }
-        product.total = product.quantity * product.price;
+        let total = quantity * price;
+        // const productSchema = orderSchema.shape.products;
+        // const validation = productSchema.safeParse({ productId, quantity, price, total });
+        // if (!validation.success) {
+        //     res.status(400).json({ message: validation.error.errors[0].message });
+        //     return;
+        // }
         const ordersCollection = (0, firestore_1.collection)(connDB_1.db, 'orders');
         const orderQuery = (0, firestore_1.query)(ordersCollection, (0, firestore_1.where)((0, firestore_1.documentId)(), '==', OrderId));
         const querySnapshot = yield (0, firestore_1.getDocs)(orderQuery);
-        if (!querySnapshot.empty) {
+        if (querySnapshot.empty) {
             res.status(404).json({ message: 'Order not found' });
             return;
         }
@@ -44,8 +43,14 @@ const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, voi
             res.status(400).json({ message: 'Order is not in the "created" state' });
             return;
         }
-        const updatedProducts = [...(orderData.products || []), product];
-        const totalAfterCal = (orderData.total || 0) + product.total;
+        const updatedProducts = [...(orderData.products || []), {
+                productId,
+                quantity,
+                price,
+                total,
+            }];
+        const totalAfterCal = (orderData.total || 0) + (total || 0);
+        console.log(typeof (orderData.products));
         yield (0, firestore_1.updateDoc)((0, firestore_1.doc)(connDB_1.db, 'orders', OrderId), {
             products: updatedProducts,
             total: totalAfterCal,
