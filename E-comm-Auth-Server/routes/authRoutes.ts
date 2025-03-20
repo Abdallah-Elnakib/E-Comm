@@ -12,10 +12,13 @@ import { resendOtp } from '../controllers/authResendOtpControllers';
 import { verifyOtp } from '../controllers/authVerifyOtpControllers';
 import { forgotPassword } from '../controllers/authForgotPasswordControllers';
 import { resetPassword } from '../controllers/authResetPasswordControllers';
-import {verifyJWT} from '../middleware/verifyJWT';
+import {checkRequestAuthentication} from '../middleware/checkRequestAuthentication';
 import {checkUser} from '../controllers/authCheckUserControllers';
 
+
 const router: Router = express.Router();
+
+router.use(checkRequestAuthentication);
 
 router.post('/login', loginUser);
 router.post('/signup', signupUser);
@@ -24,8 +27,6 @@ router.get('/check-user-auth', checkUser);
 
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
-
-// router.use(verifyJWT);
 
 router.get('/user/:id', getUserById);
 

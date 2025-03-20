@@ -35,6 +35,7 @@ services:
     depends_on:
       - auth-service
       - products-service
+      - order-service
       - rabbitmq
 
   mongo:

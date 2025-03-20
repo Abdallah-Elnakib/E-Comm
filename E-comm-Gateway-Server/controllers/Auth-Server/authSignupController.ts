@@ -22,7 +22,7 @@ export const signupUser = async (req: Request, res: Response): Promise<void> => 
         if ('status' in response) {
             const responseData = await response.json();
             req.session.refreshToken = responseData.REFRESH_TOKEN;
-            res.status(response.status).json({"Access Token": responseData.ACCESS_TOKEN});
+            res.status(response.status).json({responseData});
         } else {
             res.status(500).json({ message: "Error from auth server" });
         }

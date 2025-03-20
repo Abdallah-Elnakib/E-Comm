@@ -31,3 +31,5 @@ export const fetchAnotherServerWithoutBody = async (url: string, method: string)
         return { message: 'Internal server error' };
     }
 };
+
+

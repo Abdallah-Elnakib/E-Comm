@@ -6,11 +6,13 @@ import {editProductById} from '../controllers/editProductByIdControllers';
 import {deleteProductById} from '../controllers/deleteProductByIdControllers';
 import {undeleteProductById} from '../controllers/unDeleteProductByIdControllers';
 import {getProductRating} from '../controllers/getProductRatingControllers';
+import {checkRequestAuthentication} from '../middleware/checkRequestAuthentication';
+
 
 const router: Router = express.Router();
 
 
-
+router.use(checkRequestAuthentication);
 
 
 router.get("/all-products", getAllProducts)

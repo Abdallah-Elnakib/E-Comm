@@ -9,31 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signupUser = void 0;
+exports.addNewProductToCardByOrderIdControllers = void 0;
 const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
-const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const addNewProductToCardByOrderIdControllers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, username, email, addresses, password } = req.body;
-        if (!firstName || !lastName || !username || !email || !addresses || !password) {
-            res.status(400).json({ message: "All fields are required" });
+        const { OrderId } = req.params;
+        const { productId, quantity, price } = req.body;
+        if (!OrderId) {
+            res.status(400).json({ message: 'Order ID is required' });
             return;
         }
-        const data = {
-            firstName,
-            lastName,
-            username,
-            email,
-            addresses,
-            password
-        };
-        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.AUTHSERVER}/api/auth/signup`, 'POST', data);
+        if (!productId || !quantity || !price) {
+            res.status(400).json({ message: 'Product ID, quantity, and price are required' });
+            return;
+        }
+        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.ORDERSERVER}/api/orders/add-to-cart/${OrderId}`, 'POST', { productId, quantity, price });
         if ('status' in response) {
             const responseData = yield response.json();
-            req.session.refreshToken = responseData.REFRESH_TOKEN;
-            res.status(response.status).json({ responseData });
+            res.status(response.status).json(responseData);
+            return;
         }
         else {
-            res.status(500).json({ message: "Error from auth server" });
+            res.status(500).json({ message: "Error from order server" });
+            return;
         }
     }
     catch (error) {
@@ -41,4 +39,4 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.signupUser = signupUser;
+exports.addNewProductToCardByOrderIdControllers = addNewProductToCardByOrderIdControllers;

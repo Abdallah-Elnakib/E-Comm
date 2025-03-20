@@ -7,8 +7,11 @@ import { updateStatusOrderByOrderId } from '../controllers/updateOrderByOrderIdC
 import {addNewProductToCardByOrderId} from '../controllers/addNewProductToCardByOrderIdControllers'
 import {removeFromCard} from '../controllers/removeFromCardControllers'
 import {getAllProductFromCardByCardId} from '../controllers/getAllProductFromCardByCardIdControllers'
+import {checkRequestAuthentication} from '../middleware/checkRequestAuthentication'
 
 const router: Router = express.Router();
+
+router.use(checkRequestAuthentication)
 
 router.post('/create-order',createNewOrder)
 router.get("/all-orders", getAllOrders)
