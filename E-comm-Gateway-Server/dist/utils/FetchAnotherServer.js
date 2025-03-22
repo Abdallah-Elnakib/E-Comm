@@ -32,6 +32,7 @@ const fetchAnotherServerWithoutBody = (url, method) => __awaiter(void 0, void 0,
         const response = yield fetch(url, {
             method,
         });
+        console.log(response);
         return response;
     }
     catch (error) {

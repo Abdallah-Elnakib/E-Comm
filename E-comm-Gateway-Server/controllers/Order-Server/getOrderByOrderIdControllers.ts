@@ -3,7 +3,7 @@ import { fetchAnotherServerWithoutBody} from '../../utils/FetchAnotherServer';
 
 export const getOrderByOrderId = async (req: Request, res: Response) => {
     try {
-        const response = await fetchAnotherServerWithoutBody(`${process.env.ORDERSERVER}/api/orders/order/${req.params.id}`, 'GET');
+        const response = await fetchAnotherServerWithoutBody(`${process.env.ORDERSERVER}/api/orders/order/${req.params.OrderId}`, 'GET');
         if ('status' in response) {
             const responseData = await response.json();
             res.status(response.status).json(responseData);

@@ -8,25 +8,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewProductToCardByOrderId = void 0;
-const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
-const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.checkRequestAuthentication = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const checkRequestAuthentication = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.ORDERSERVER}/api/orders/add-to-cart/${req.params.OrderId}`, 'POST', req.body);
-        if ('status' in response) {
-            const responseData = yield response.json();
-            res.status(response.status).json(responseData);
-            return;
+        if (req.headers.username === process.env.CHECK_REQUEST_AUTHENTICATION_USERNAME && req.headers.password === process.env.CHECK_REQUEST_AUTHENTICATION_PASSWORD) {
+            next();
+        }
+        else if (`${req.protocol}://${req.get('host')}` === process.env.ENDPOINTAUTH) {
+            next();
         }
         else {
-            res.status(500).json({ message: "Error from order server" });
+            res.status(401).json({ message: "Unauthorized" });
             return;
         }
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
+        return;
     }
 });
-exports.addNewProductToCardByOrderId = addNewProductToCardByOrderId;
+exports.checkRequestAuthentication = checkRequestAuthentication;

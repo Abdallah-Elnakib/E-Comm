@@ -11,7 +11,9 @@ const editProductByIdControllers_1 = require("../controllers/editProductByIdCont
 const deleteProductByIdControllers_1 = require("../controllers/deleteProductByIdControllers");
 const unDeleteProductByIdControllers_1 = require("../controllers/unDeleteProductByIdControllers");
 const getProductRatingControllers_1 = require("../controllers/getProductRatingControllers");
+const checkRequestAuthentication_1 = require("../middleware/checkRequestAuthentication");
 const router = express_1.default.Router();
+router.use(checkRequestAuthentication_1.checkRequestAuthentication);
 router.get("/all-products", getAllProductsControllers_1.getAllProducts);
 router.get("/product/:id", getProductByIdControllers_1.getProductById);
 router.post("/add-new-product", addNewProductControllers_1.addNewProduct);

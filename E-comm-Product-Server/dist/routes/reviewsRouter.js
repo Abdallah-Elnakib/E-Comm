@@ -8,7 +8,9 @@ const addNewReviewControllers_1 = require("../controllers/addNewReviewController
 const getReviewByIdControllers_1 = require("../controllers/getReviewByIdControllers");
 const getReviewByProductIdControllers_1 = require("../controllers/getReviewByProductIdControllers");
 const deleteReviewByIdControllers_1 = require("../controllers/deleteReviewByIdControllers");
+const checkRequestAuthentication_1 = require("../middleware/checkRequestAuthentication");
 const router = express_1.default.Router();
+router.use(checkRequestAuthentication_1.checkRequestAuthentication);
 router.post("/add-new-review", addNewReviewControllers_1.addNewReview);
 router.get("/review/:id", getReviewByIdControllers_1.getReviewById);
 router.get('/product/:id', getReviewByProductIdControllers_1.getReviewByProductId);

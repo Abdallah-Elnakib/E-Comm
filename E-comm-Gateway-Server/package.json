@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "npx tsc && nodemon dist/index.js",
-    "dev": "nodemon dist/index.js"
+    "dev": "nodemon -r tsconfig-paths/register index.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,8 @@
     "getway-server": "file:",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2"
   },
   "devDependencies": {

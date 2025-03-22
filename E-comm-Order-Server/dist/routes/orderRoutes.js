@@ -12,7 +12,9 @@ const updateOrderByOrderIdControllers_1 = require("../controllers/updateOrderByO
 const addNewProductToCardByOrderIdControllers_1 = require("../controllers/addNewProductToCardByOrderIdControllers");
 const removeFromCardControllers_1 = require("../controllers/removeFromCardControllers");
 const getAllProductFromCardByCardIdControllers_1 = require("../controllers/getAllProductFromCardByCardIdControllers");
+const checkRequestAuthentication_1 = require("../middleware/checkRequestAuthentication");
 const router = express_1.default.Router();
+router.use(checkRequestAuthentication_1.checkRequestAuthentication);
 router.post('/create-order', createNewOrederControllers_1.createNewOrder);
 router.get("/all-orders", getAllOrdersControllers_1.getAllOrders);
 router.get("/user/:userId", getOrderByUserIdControllers_1.getOrderByUserId);

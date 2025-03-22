@@ -23,7 +23,6 @@ export const fetchAnotherServerWithoutBody = async (url: string, method: string)
         const response = await fetch(url, {
             method,
         });
-        
         return response;
         
     } catch (error) {
@@ -31,5 +30,6 @@ export const fetchAnotherServerWithoutBody = async (url: string, method: string)
         return { message: 'Internal server error' };
     }
 };
+
 
 

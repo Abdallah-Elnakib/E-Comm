@@ -4,7 +4,7 @@ import { fetchAnotherServer } from '../../utils/FetchAnotherServer';
 export const addNewProductToCardByOrderId = async (req: Request, res: Response) => {
     try {
         
-        const response = await fetchAnotherServer(`${process.env.ORDERSERVER}/api/orders/add-to-cart/${req.params.id}`, 'POST', req.body);
+        const response = await fetchAnotherServer(`${process.env.ORDERSERVER}/api/orders/add-to-cart/${req.params.OrderId}`, 'POST', req.body);
         if ('status' in response) {
             const responseData = await response.json();
             res.status(response.status).json(responseData);

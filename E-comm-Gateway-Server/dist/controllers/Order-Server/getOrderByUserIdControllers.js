@@ -10,31 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOrderByUserId = void 0;
-const connDB_1 = require("../config/connDB");
-const firestore_1 = require("firebase/firestore");
+const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
 const getOrderByUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.params;
-        if (!userId) {
-            res.status(400).json({ message: 'User ID is required' });
-            return;
-        }
-        const ordersCollection = (0, firestore_1.collection)(connDB_1.db, 'orders');
-        const userOrdersQuery = (0, firestore_1.query)(ordersCollection, (0, firestore_1.where)("userId", "==", userId));
-        const querySnapshot = yield (0, firestore_1.getDocs)(userOrdersQuery);
-        if (querySnapshot.empty) {
-            res.status(404).json({ message: 'No orders found for the user' });
+        const response = yield (0, FetchAnotherServer_1.fetchAnotherServerWithoutBody)(`${process.env.ORDERSERVER}/api/orders/user/${req.params.userId}`, 'GET');
+        if ('status' in response) {
+            const responseData = yield response.json();
+            res.status(response.status).json(responseData);
             return;
         }
         else {
-            const orders = querySnapshot.docs.map((doc) => doc.data());
-            res.status(200).json(orders);
-            return;
+            res.status(500).json({ message: "Error from order server" });
         }
     }
     catch (error) {
-        console.error('Error getting orders:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 });
 exports.getOrderByUserId = getOrderByUserId;

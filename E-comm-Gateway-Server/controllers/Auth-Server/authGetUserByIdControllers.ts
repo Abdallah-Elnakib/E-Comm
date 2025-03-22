@@ -9,7 +9,6 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
             return;
         }
         const response = await fetchAnotherServerWithoutBody(`${process.env.AUTHSERVER}/api/auth/user/${id}`, 'GET');
-        console.log(response);
         if ('status' in response) {
             const responseData = await response.json();
             res.status(response.status).json(responseData);

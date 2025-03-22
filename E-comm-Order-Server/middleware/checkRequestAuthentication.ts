@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 export const checkRequestAuthentication = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log(`${req.protocol}://${req.get('host')}`);
     try {
         if ( req.headers.username === process.env.CHECK_REQUEST_AUTHENTICATION_USERNAME && req.headers.password === process.env.CHECK_REQUEST_AUTHENTICATION_PASSWORD) {
             next();

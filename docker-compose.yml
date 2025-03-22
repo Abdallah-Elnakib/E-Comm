@@ -20,7 +20,7 @@ services:
   order-service:
     build: ./E-comm-Order-Server
     ports:
-      - "6000:6000"
+      - "3002:3002"
     env_file:
       - ./E-comm-Order-Server/.env
     depends_on:
@@ -82,7 +82,7 @@ services:
       - redis-data:/data
 
   firebase:
-    image: node:18  # Use Node.js v18
+    image: node:18  
     container_name: firebase
     ports:
       - "4000:4000"

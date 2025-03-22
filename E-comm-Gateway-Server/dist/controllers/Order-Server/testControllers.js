@@ -9,24 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewProductToCardByOrderId = void 0;
+exports.testControllers = void 0;
 const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
-const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const testControllers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.ORDERSERVER}/api/orders/add-to-cart/${req.params.OrderId}`, 'POST', req.body);
-        if ('status' in response) {
-            const responseData = yield response.json();
-            res.status(response.status).json(responseData);
-            return;
-        }
-        else {
-            res.status(500).json({ message: "Error from order server" });
-            return;
-        }
+        const url = `http://127.0.0.1:6000/api/orders/test`;
+        const response = yield (0, FetchAnotherServer_1.fetchAnotherServerWithoutBody)(url, 'GET');
+        res.status(200).json(response);
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.addNewProductToCardByOrderId = addNewProductToCardByOrderId;
+exports.testControllers = testControllers;

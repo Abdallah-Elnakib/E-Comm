@@ -5,7 +5,6 @@ import { collection, where , query, getDocs} from 'firebase/firestore';
 export const getOrderByUserId = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        console.log('User ID:', userId);
         if (!userId) {
             res.status(400).json({ message: 'User ID is required' });
             return;

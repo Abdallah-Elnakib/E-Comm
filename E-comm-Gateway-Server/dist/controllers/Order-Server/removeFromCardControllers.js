@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addNewProductToCardByOrderId = void 0;
+exports.removeFromCard = void 0;
 const FetchAnotherServer_1 = require("../../utils/FetchAnotherServer");
-const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const removeFromCard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.ORDERSERVER}/api/orders/add-to-cart/${req.params.OrderId}`, 'POST', req.body);
+        const response = yield (0, FetchAnotherServer_1.fetchAnotherServer)(`${process.env.ORDERSERVER}/api/orders/remove-from-cart/${req.params.OrderId}`, 'DELETE', req.body);
         if ('status' in response) {
             const responseData = yield response.json();
             res.status(response.status).json(responseData);
@@ -29,4 +29,4 @@ const addNewProductToCardByOrderId = (req, res) => __awaiter(void 0, void 0, voi
         res.status(500).json({ message: "Internal server error" });
     }
 });
-exports.addNewProductToCardByOrderId = addNewProductToCardByOrderId;
+exports.removeFromCard = removeFromCard;

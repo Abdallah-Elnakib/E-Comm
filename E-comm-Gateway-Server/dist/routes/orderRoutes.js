@@ -5,20 +5,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const createNewOrederControllers_1 = require("../controllers/Order-Server/createNewOrederControllers");
-// import { getAllOrders } from '../controllers/getAllOrdersControllers';
-// import { getOrderByUserId } from '../controllers/getOrderByUserIdControllers';
-// import { getOrderByOrderId } from '../controllers/getOrderByOrderIdControllers';
-// import { updateStatusOrderByOrderId } from '../controllers/updateOrderByOrderIdControllers';
-// import {addNewProductToCardByOrderId} from '../controllers/addNewProductToCardByOrderIdControllers'
-// import {removeFromCard} from '../controllers/removeFromCardControllers'
-// import {getAllProductFromCardByCardId} from '../controllers/getAllProductFromCardByCardIdControllers'
+const getAllOrdersControllers_1 = require("../controllers/Order-Server/getAllOrdersControllers");
+const getOrderByUserIdControllers_1 = require("../controllers/Order-Server/getOrderByUserIdControllers");
+const getOrderByOrderIdControllers_1 = require("../controllers/Order-Server/getOrderByOrderIdControllers");
+const updateOrderByOrderIdControllers_1 = require("../controllers/Order-Server/updateOrderByOrderIdControllers");
+const addNewProductToCardByOrderIdControllers_1 = require("../controllers/Order-Server/addNewProductToCardByOrderIdControllers");
+const removeFromCardControllers_1 = require("../controllers/Order-Server/removeFromCardControllers");
+const getAllProductFromCardByCardIdControllers_1 = require("../controllers/Order-Server/getAllProductFromCardByCardIdControllers");
+const verifyJwt_1 = require("../middleware/verifyJwt");
 const router = express_1.default.Router();
+router.use(verifyJwt_1.verifyJWT);
 router.post('/create-order', createNewOrederControllers_1.createNewOrder);
-// router.get("/all-orders", getAllOrders)
-// router.get("/user/:userId", getOrderByUserId)
-// router.get("/order/:OrderId", getOrderByOrderId)
-// router.patch("/update-status-order/:OrderId", updateStatusOrderByOrderId)
-// router.post("/add-to-cart/:OrderId", addNewProductToCardByOrderId)
-// router.delete("/remove-from-cart/:OrderId", removeFromCard)
-// router.get("/get-all-products/:CardId", getAllProductFromCardByCardId)
+router.get("/all-orders", getAllOrdersControllers_1.getAllOrders);
+router.get("/user/:userId", getOrderByUserIdControllers_1.getOrderByUserId);
+router.get("/order/:OrderId", getOrderByOrderIdControllers_1.getOrderByOrderId);
+router.patch("/update-status-order/:OrderId", updateOrderByOrderIdControllers_1.updateStatusOrderByOrderId);
+router.post("/add-to-cart/:OrderId", addNewProductToCardByOrderIdControllers_1.addNewProductToCardByOrderId);
+router.delete("/remove-from-cart/:OrderId", removeFromCardControllers_1.removeFromCard);
+router.get("/get-all-products/:CardId", getAllProductFromCardByCardIdControllers_1.getAllProductFromCardByCardId);
 exports.default = router;
