@@ -1,0 +1,14 @@
+import express, { Request, Response, Express } from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+import cors from 'cors';
+
+export const app: Express = express();
+
+app.use(express.json());
+app.use(cors());
+
+
+app.listen(process.env.PORT || 3001, () => {
+    console.log(`🚀 Notification-Server is running on port ${process.env.PORT}...........`);
+});
