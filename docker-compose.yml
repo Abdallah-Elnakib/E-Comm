@@ -26,6 +26,15 @@ services:
     depends_on:
       - firebase
 
+  notification-service:
+    build: ./E-comm-Notification-Server
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./E-comm-Notification-Server/.env
+    depends_on:
+      - rabbitmq
+
   gateway-service:
     build: ./E-comm-Gateway-Server
     ports:

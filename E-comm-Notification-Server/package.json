@@ -13,8 +13,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/amqplib": "^0.10.7",
     "@types/express": "^5.0.1",
     "@types/node": "^22.13.11",
+    "@types/nodemailer": "^6.4.17",
     "amqplib": "^0.10.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
