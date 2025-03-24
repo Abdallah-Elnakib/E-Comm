@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import cors from 'cors';
 import oreders from './routes/orderRoutes';
-// import {connDB} from './config/connDB';
+import {connectRabbitMQ} from './config/rabbitMQ';
+
 
 const app: Express = express();
 
@@ -14,5 +15,5 @@ app.use('/api/orders', oreders);
 
 app.listen(process.env.PORT || 6000, async () => {
     console.log(`🚀 Order-Server is running on port ${process.env.PORT}...........`);
-    // await connDB();
+    await connectRabbitMQ();
 });

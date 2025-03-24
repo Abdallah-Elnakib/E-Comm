@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import { db } from '../config/connDB';
 import { doc, getDocs, updateDoc ,query, where, collection, documentId} from 'firebase/firestore';
+import {sendEmail} from '../config/rabbitMQ';
 
 export const updateStatusOrderByOrderId = async (req: Request, res: Response) => {
     try {
@@ -38,6 +39,9 @@ export const updateStatusOrderByOrderId = async (req: Request, res: Response) =>
         await updateDoc(doc(db, 'orders', orderId), {
             orderStatus: status,
         });
+        
+
+        await sendEmail({OrderId, status, email: orderDoc.data().userEmail, userId: orderDoc.data().userId});
 
         res.status(200).json({ message: 'Order status updated successfully' });
         return;

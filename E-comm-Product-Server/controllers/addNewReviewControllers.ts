@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { connDB } from '../config/connDB';
-import {sendMailRating_5, sendMailRating_3, sendMailRating_1} from '../utils/milesFormulas';
+import {sendEmail} from '../config/rabbitmq';
 
 
 
@@ -41,9 +41,9 @@ export const addNewReview = async (req: Request, res: Response): Promise<void> =
                     con.end();
                     return;
                 }
-                if (rating === 5 || rating === 4) await sendMailRating_5(reviewer_email);
-                if (rating === 3) await sendMailRating_3(reviewer_email);
-                if (rating === 1 || rating === 2) await sendMailRating_1(reviewer_email);
+                if (rating === 5 || rating === 4) await sendEmail({'message': 'Review-5-Or-4', email: reviewer_email});
+                if (rating === 3) await sendEmail({'message': 'Review-3', email: reviewer_email});
+                if (rating === 1 || rating === 2) await sendEmail({'message': 'Review-1-Or-2', email: reviewer_email});
                 
                 res.status(200).json({ message: "Review added successfully" });
                 con.end();

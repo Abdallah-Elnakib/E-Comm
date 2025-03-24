@@ -7,9 +7,9 @@ export const createNewOrder = async (req: Request, res: Response): Promise<void>
     try {
         let ProductsData: any[] = []; 
         let totalAfterCal = 0;
-        const { userId, products, orderStatus, total } = req.body;
+        const { userId, userEmail ,products, orderStatus, total } = req.body;
 
-        const validation = orderSchema.safeParse({ userId, products, orderStatus, total });
+        const validation = orderSchema.safeParse({ userId, userEmail, products, orderStatus, total });
         if (!validation.success) {
             res.status(400).json({ message: validation.error.errors[0].message });
             return;
@@ -39,6 +39,7 @@ export const createNewOrder = async (req: Request, res: Response): Promise<void>
 
         const newOrder: Order = {
             userId,
+            userEmail,
             products: ProductsData, 
             orderStatus,
             total: totalAfterCal,

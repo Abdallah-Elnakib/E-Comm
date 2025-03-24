@@ -1,7 +1,9 @@
 import amqp from 'amqplib';
 import dotenv from 'dotenv';
-import {sendVerificationEmail, sendOtp} from '../utils/milesFormulas';
 dotenv.config();
+import { sendEmailFromAuthServer } from '../Send-Emails/Auth-Server/SendEmailFromAuthServer';
+import { sendEmailFromProductServer } from '../Send-Emails/Product-Server/SendEmailFromProductServer';
+import { sendEmailFromOrderServer } from '../Send-Emails/Order-Server/SendEmailFromOrderServer';
 
 const RABBITMQ_URL = process.env.RABBITMQ_URL || '';
 export let channel: amqp.Channel | null = null;
@@ -16,27 +18,9 @@ export const connectRabbitMQ = async (retries = 5, delay = 5000) => {
       channel = await connection.createChannel();
       console.log("✅ Connected to RabbitMQ Notification-Server");
 
-      const exchange = 'auth_exchange';
-      const routingKey = 'auth_routing_key';
-      const queue = 'reply_queue_d6e3a48d-5410-482d-be2a-9d2e65c11074';
-  
-      await channel.assertExchange(exchange, 'direct', { durable: true });
-      await channel.assertQueue(queue, { durable: false });
-      await channel.bindQueue(queue, exchange, routingKey);
-  
-      channel.consume(queue, (msg) => {
-        if (msg) {
-          console.log("📩 Message received from RabbitMQ Auth-Server:", msg.content.toString());
-          const result = JSON.parse(msg.content.toString());
-          if (result.message === "Forgot-Password") {
-            sendVerificationEmail(result.email, result.token);
-          }
-          else if (result.message === "Resend-OTP" || result.message === "Send-OTP") {
-            sendOtp(result.email, result.otp);
-          }
-        }
-      }, { noAck: true });
-
+      await sendEmailFromAuthServer();
+      await sendEmailFromProductServer();
+      await sendEmailFromOrderServer();
       
       connection.on('close', () => {
         console.error("❌ RabbitMQ connection closed. Reconnecting...");

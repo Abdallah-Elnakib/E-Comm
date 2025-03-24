@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 
-app.listen(process.env.PORT || 3001, () => {
+app.listen(process.env.PORT || 3001, async () => {
     console.log(`🚀 Notification-Server is running on port ${process.env.PORT}...........`);
-    connectRabbitMQ();
+    await connectRabbitMQ();
 });

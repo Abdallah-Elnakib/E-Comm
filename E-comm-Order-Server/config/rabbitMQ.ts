@@ -14,7 +14,7 @@ export const connectRabbitMQ = async (retries = 5, delay = 5000) => {
 
         const connection = await amqp.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
-        console.log("✅ Connected to RabbitMQ Product-Server");
+        console.log("✅ Connected to RabbitMQ Order-Server");
 
         connection.on('close', () => {
             console.error("❌ RabbitMQ connection closed. Reconnecting...");
@@ -60,9 +60,10 @@ const sendToQueue = async (exchange: string, routingKey: string, message: string
 export const sendEmail = async (message: object): Promise<void> => {
     try {
         const correlationId = uuidv4();
-        const exchange = 'product_exchange';
-        const routingKey = 'product_routing_key';
+        const exchange = 'order_exchange';
+        const routingKey = 'order_routing_key';
         const replyQueue = `reply_queue_${uuidv4()}`;
+        console.log(replyQueue)
 
         if (!channel) {
             throw new Error("Channel is not connected to RabbitMQ");

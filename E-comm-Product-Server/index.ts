@@ -20,8 +20,8 @@ app.use('/api/reviews', reviewRoutes);
 
 app.listen(process.env.PORT || 5000, async () => {
     console.log(`🚀 Product-Server is running on port ${process.env.PORT}...........`);
+    await connectRabbitMQ();
     await connRedis();
-    // connectRabbitMQ();
 });
 
 

@@ -81,3 +81,56 @@ export async function sendOtp(email: string, otp: string) {
     throw error;
   }
 }
+
+
+export async function orderStatus(email: string, orderId: string, userId: string, status: string) {
+    try {
+      const mailResponse = await mailSender(
+        email,
+        `Your Order IS ${status}`,
+        `<h1>Order Confirmation</h1>
+         <p>Dear Customer,</p>
+         <p>Thank you for placing an order with us. Here are your order details:</p>
+        <ul>
+          <li><strong>Customer ID:</strong> ${userId}</li>
+          <li><strong>Order ID:</strong> ${orderId}</li>
+          <li><strong>Order Status:</strong> In-Progress</li>
+        </ul>
+        <p>We will inform you of any changes that occur if you have any questions Please do not hesitate to contact us.</p>
+        <p>Best regards,<br>E-commerce Team</p>`
+      );
+      console.log("Email sent successfully: ", mailResponse);
+
+    } catch (error) {
+      console.log("Error occurred while sending email: ", error);
+      throw error;
+    }
+  }
+
+  export async function orderReview(email: string, orderId: string, userId: string) {
+    try {
+      const mailResponse = await mailSender(
+        email,
+        'Your Order Has Been Delivered',
+          `<h1>Order Delivered</h1>
+          <p>Dear Customer,</p>
+          <p>We are pleased to inform you that your order has been successfully delivered. Here are your order details:</p>
+          <ul>
+            <li><strong>Customer ID:</strong> ${userId}</li>
+            <li><strong>Order ID:</strong> ${orderId}</li>
+            <li><strong>Delivery Status:</strong> Delivered</li>
+          </ul>
+          <p>We hope you are satisfied with our service. If you have a moment, please take the time to evaluate the service provided by <strong>E-Comm</strong>.</p>
+          <p>Click the link below to provide your feedback:</p>
+          <p><a href="https://products-service:5000/api/reviews/add-new-review">Evaluate Service</a></p>
+          <p>Thank you for choosing us!</p>
+          <p>Best regards,<br>Your Company Name</p>
+    `
+      );
+      console.log("Email sent successfully: ", mailResponse);
+
+    } catch (error) {
+      console.log("Error occurred while sending email: ", error);
+      throw error;
+    }
+  }

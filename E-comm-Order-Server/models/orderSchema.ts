@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export const orderSchema = z.object({
     userId: z.string().min(1, "User ID is required"),
+    userEmail: z.string().email("Invalid email address"),
     products: z.array(
         z.object({
             productId: z.number().min(1, "Product ID is required"),
