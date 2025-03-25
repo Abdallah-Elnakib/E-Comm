@@ -47,7 +47,7 @@ CHECK_REQUEST_AUTHENTICATION_PASSWORD="basic_auth_password"
 # Authentication Service API Endpoints
 
 ## Base URL
-`http://your-domain.com/api/v1`
+`http://localhost:3000/api/auth`
 
 ---
 
