@@ -62,7 +62,7 @@ CHECK_REQUEST_AUTHENTICATION_PASSWORD="basic_auth_password"
   "email": "user@example.com",
   "password": "securePassword123"
 }
-
+```
 **Success Response:**
 
 ```json
@@ -75,7 +75,7 @@ CHECK_REQUEST_AUTHENTICATION_PASSWORD="basic_auth_password"
     "email": "user@example.com"
   }
 }
-
+```
 **Error Response:**
 
 ```json
@@ -84,4 +84,4 @@ CHECK_REQUEST_AUTHENTICATION_PASSWORD="basic_auth_password"
   "error": "Invalid credentials",
   "statusCode": 401
 }
-
+```
