@@ -329,3 +329,59 @@ Initiates the password reset process by sending a reset link to the user's email
   "message": "Internal server error"
 }
 ```
+## Get All Addresses
+
+**Endpoint:** `GET /address/get-all/:user_id`
+
+Retrieves all stored addresses for a specified user.
+
+### Request
+
+**URL Parameters:**
+| Parameter | Type   | Required | Description          |
+|-----------|--------|----------|----------------------|
+| user_id   | string | Yes      | MongoDB User ID      |
+
+**Headers:**
+```http
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+### Success (200 OK):
+
+```json
+
+{
+  "Address": [
+    {
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10001"
+    },
+    {
+      "street": "456 Oak Ave",
+      "city": "Boston",
+      "state": "MA",
+      "zip": "02108"
+    }
+  ]
+}
+```
+
+### 401 Unauthorized (Invalid User ID):
+
+```json
+{
+  "message": "Invalid User ID"
+}
+```
+
+### Server Error (500 Internal Server Error):
+
+```json
+{
+  "message": "Internal server error"
+}
+```
