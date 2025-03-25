@@ -85,3 +85,75 @@ CHECK_REQUEST_AUTHENTICATION_PASSWORD="basic_auth_password"
   "statusCode": 401
 }
 ```
+
+# Add New Address Endpoint
+
+## `POST /address/add-address/:user_id`
+
+Adds a new address to a user's profile.
+
+---
+
+## Request
+
+### URL Parameters
+| Parameter | Type   | Required | Description          |
+|-----------|--------|----------|----------------------|
+| user_id   | string | Yes      | The ID of the user   |
+
+
+### Request Body
+```json
+{
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10001"
+  }
+}
+```
+
+### Response
+```json
+{
+  "Address": [
+    {
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10001"
+    },
+    ...other_addresses
+  ]
+}
+```
+
+### Error Responses
+
+### Invalid User ID (401 Unauthorized)
+
+```json
+
+{
+  "message": "Invalid User ID"
+}
+```
+
+### Missing Fields (400 Bad Request)
+
+```json
+
+{
+  "message": "All address fields are required"
+}
+```
+
+### Server Error (500 Internal Server Error)
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
