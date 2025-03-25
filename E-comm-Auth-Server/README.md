@@ -701,4 +701,279 @@ Content-Type: application/json
 ```
 
 
+## User Signup
+
+**Endpoint:** `POST /signup`
+
+Creates a new user account with the provided information and returns authentication tokens.
+
+### Request
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+### Request Body:
+
+```json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe",
+  "email": "john.doe@example.com",
+  "password": "SecurePass123!",
+  "addresses": [
+    {
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10001"
+    }
+  ]
+}
+```
+
+### Address Object:
+
+```json
+
+{
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+```
+
+### Responses
+
+### Success (201 Created):
+
+```json 
+
+{
+  "ACCESS_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "REFRESH_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### 400 Bad Request (Validation errors):
+
+```json
+
+{
+  "message": "All fields are required"
+}
+// OR
+{
+  "message": "Password must be more than 8 characters"
+}
+// OR
+{
+  "message": "Addresses must be a non-empty array"
+}
+// OR (Zod validation)
+{
+  "message": [
+    {
+      "code": "invalid_type",
+      "path": ["email"],
+      "message": "Invalid email"
+    }
+  ]
+}
+```
+
+### 400 Bad Request (Invalid email):
+
+```json
+
+{
+  "message": "Invalid email address"
+}
+```
+
+### 401 Unauthorized (User exists):
+
+```json
+{
+  "message": "User already exists"
+}
+```
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
+## Update Address
+
+**Endpoint:** `PUT /address/update-address/:user_id`
+
+Updates a specific address in a user's address list by its index number.
+
+### Request
+
+**URL Parameters:**
+| Parameter | Type   | Required | Description          |
+|-----------|--------|----------|----------------------|
+| user_id   | string | Yes      | MongoDB User ID      |
+
+**Headers:**
+```http
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+
+### Request Body:
+
+```json
+
+{
+  "addressNumber": 1,
+  "address": {
+    "street": "456 Updated St",
+    "city": "Chicago",
+    "state": "IL",
+    "zip": "60601"
+  }
+}
+```
+
+### Responses
+
+### Success (200 OK):
+
+```json
+
+{
+  "Address": [
+    {
+      "street": "456 Updated St",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": "60601"
+    },
+    ...other_addresses
+  ]
+}
+```
+
+### 400 Bad Request (Missing fields):
+
+```json
+{
+  "message": "User id is required"
+}
+// OR
+{
+  "message": "Address number and address are required"
+}
+// OR
+{
+  "message": "All address fields are required"
+}
+```
+
+### 401 Unauthorized (Invalid IDs):
+
+```json
+{
+  "message": "Invalid User ID"
+}
+// OR
+{
+  "message": "Invalid Address Number"
+}
+```
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
+## Verify OTP
+
+**Endpoint:** `POST /verify-otp`
+
+Verifies a one-time password (OTP) sent to a user's email address for authentication purposes.
+
+### Request
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+### Request Body:
+
+```json
+
+{
+  "email": "user@example.com",
+  "otp": "123456"
+}
+```
+
+### Responses
+
+### Success (200 OK):
+
+```json
+{
+  "message": "OTP verified successfully"
+}
+```
+
+### 400 Bad Request (Missing fields):
+
+```json
+{
+  "message": "Email and OTP are required"
+}
+```
+
+### 400 Bad Request (Invalid email):
+
+```json
+{
+  "message": "Invalid email address"
+}
+```
+
+### 400 Bad Request (OTP not found):
+
+```json
+{
+  "message": "OTP not found"
+}
+```
+
+### 400 Bad Request (Invalid OTP):
+
+```json
+{
+  "message": "Invalid OTP"
+}
+``` 
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
 
