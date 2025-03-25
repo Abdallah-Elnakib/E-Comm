@@ -208,3 +208,76 @@ Verifies a user's authentication status by validating their refresh token.
   "message": "Internal server error"
 }
 ```
+
+# Delete Address by ID Endpoint
+
+## `DELETE /address/delete/:user_id`
+
+Deletes a specific address from a user's address list by its index number.
+
+---
+
+## Request
+
+### URL Parameters
+| Parameter | Type   | Required | Description          |
+|-----------|--------|----------|----------------------|
+| user_id   | string | Yes      | The ID of the user   |
+
+### Request Body
+```json
+{
+  "addressNumber": 1
+}
+```
+
+### Success (200 OK)
+
+```json
+
+{
+  "message": "Address deleted successfully"
+}
+```
+
+### Error Responses
+Invalid User ID (401 Unauthorized)
+
+```json
+
+{
+  "message": "Invalid User ID"
+}
+```
+
+### Missing Address Number (400 Bad Request)
+
+```json
+
+{
+  "message": "Address Number is required"
+}
+```
+### Invalid Address Number (401 Unauthorized)
+
+```json
+{
+  "message": "Invalid Address Number"
+}
+```
+### Last Address Protection (401 Unauthorized)
+
+```json
+{
+  "message": "The address cannot be deleted before adding another address."
+}
+```
+### Server Error (500 Internal Server Error)
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
