@@ -279,5 +279,53 @@ Invalid User ID (401 Unauthorized)
 {
   "message": "Internal server error"
 }
+
+```
+# Forgot Password Endpoint
+
+## `POST /forgot-password`
+
+Initiates the password reset process by sending a reset link to the user's email.
+
+---
+
+## Request
+
+
+### Request Body
+```json
+{
+  "email": "user@example.com"
+}
 ```
 
+### Success (200 OK)
+
+```json
+{
+  "message": "Reset password email sent successfully"
+}
+```
+### Missing Email (400 Bad Request)
+
+```json
+{
+  "message": "Email is required"
+}
+```
+
+### Email Not Found (400 Bad Request)
+
+```json
+{
+  "message": "Email not found"
+}
+```
+
+### Server Error (500 Internal Server Error)
+
+```json
+{
+  "message": "Internal server error"
+}
+```
