@@ -385,3 +385,320 @@ Content-Type: application/json
   "message": "Internal server error"
 }
 ```
+## Get User by ID
+
+**Endpoint:** `GET /user/:id`
+
+Retrieves complete user data for a specified user ID.
+
+### Request
+
+**URL Parameters:**
+| Parameter | Type   | Required | Description          |
+|-----------|--------|----------|----------------------|
+| id        | string | Yes      | MongoDB User ID      |
+
+**Headers:**
+```http
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+### Success (200 OK):
+
+```json
+{
+  "UserData": {
+    "_id": "507f1f77bcf86cd799439011",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "address": [
+      {
+        "street": "123 Main St",
+        "city": "New York",
+        "state": "NY",
+        "zip": "10001"
+      }
+    ],
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  }
+}
+```
+### 400 Bad Request (Missing ID):
+
+```json
+{
+  "message": "All fields are required"
+}
+```
+### 401 Unauthorized (Invalid ID):
+
+```json
+{
+  "message": "Invalid ID"
+}
+```
+### Server Error (500 Internal Server Error):
+
+```json
+{
+  "message": "Internal server error"
+}
+```
+
+## Logout
+
+**Endpoint:** `GET /logout`
+
+Terminates the current user session by clearing authentication cookies and tokens.
+
+### Request
+
+**Headers:**
+```http
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+### Cookies:
+
+## Requires session cookie (connect.sid)
+
+### Responses
+## Success (200 OK):
+
+```json
+
+{
+  "message": "Logout successful"
+}
+```
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
+## Resend OTP
+
+**Endpoint:** `POST /resend-otp`
+
+Generates and sends a new One-Time Password (OTP) to the user's email address when the previous OTP has expired or wasn't received.
+
+### Request
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+### Request Body:
+
+```json
+
+{
+  "email": "user@example.com"
+}
+
+```
+### Success (200 OK):
+
+```json
+
+{
+  "message": "OTP sent successfully"
+}
+```
+
+### Error Responses:
+
+### 400 Bad Request (Missing Email):
+
+```json
+{
+  "message": "Email is required"
+}
+```
+### 400 Bad Request (Invalid Email):
+
+```json
+
+{
+  "message": "Invalid email address"
+}
+```
+
+### 400 Bad Request (Existing OTP):
+
+```json 
+
+{
+  "message": "OTP already sent please wait for 1 minutes and try again"
+}
+```
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
+## Reset Password
+
+**Endpoint:** `POST /reset-password`
+
+Allows users to set a new password after verifying their identity through a password reset token.
+
+### Request
+
+**URL Parameters:**
+```http
+POST /reset-password?token=<reset_token>
+```
+
+### Request Body:
+
+```json
+
+{
+  "newassword": "newSecurePassword123",
+  "confirmpassword": "newSecurePassword123"
+}
+
+```
+### success (200 OK):
+
+```json
+
+{
+  "message": "Password reset successfully"
+}
+```
+### 400 Bad Request (Missing fields):
+
+```json
+
+{
+  "message": "All fields are required"
+}
+```
+
+### 400 Bad Request (Password mismatch):
+
+```json
+
+{
+  "message": "Passwords do not match"
+}
+```
+
+### 400 Bad Request (Invalid token):
+
+```json
+
+{
+  "message": "Invalid token"
+}
+```
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
+## Send OTP
+
+**Endpoint:** `POST /send-otp`
+
+Generates and sends a one-time password (OTP) to the specified email address for verification purposes.
+
+### Request
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+### Request Body:
+
+```json
+
+{
+  "email": "user@example.com"
+}
+```
+
+### Responses
+
+### Success (200 OK):
+
+```json
+{
+  "message": "OTP sent successfully"
+}
+```
+
+### 400 Bad Request (Missing email):
+
+```json
+
+{
+  "message": "Email is required"
+}
+```
+
+### 400 Bad Request (Invalid email):
+
+```json
+
+{
+  "message": "Invalid email address"
+}
+```
+
+### 400 Bad Request (Existing OTP):
+
+```json
+{
+  "message": "OTP already sent please wait for 1 minutes and try again"
+}
+```
+
+### 400 Bad Request (Validation error):
+
+```json
+{
+  "message": [
+    {
+      "code": "invalid_type",
+      "expected": "string",
+      "received": "undefined",
+      "path": ["email"],
+      "message": "Email is required"
+    }
+  ]
+}
+```
+
+### 500 Internal Server Error:
+
+```json
+
+{
+  "message": "Internal server error"
+}
+```
+
+
+
