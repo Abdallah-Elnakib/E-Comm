@@ -157,3 +157,54 @@ Adds a new address to a user's profile.
   "message": "Internal server error"
 }
 ```
+
+# Check User Authentication Endpoint
+
+## `GET /check-user-auth`
+
+Verifies a user's authentication status by validating their refresh token.
+
+---
+
+## Request
+
+
+### Session Requirements
+- Must have a valid `refreshToken` stored in session
+
+---
+
+## Responses
+
+### Success (200 OK)
+```json
+{
+  "message": {
+    "userInfo": {
+      "userId": "5f8d0d55b54764421b7166f3",
+      "email": "user@example.com",
+      "roles": ["user"]
+    }
+  }
+}
+```
+
+### Missing Token (401 Unauthorized)
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+### Invalid Token (401 Unauthorized)
+```json
+{
+  "message": "Unauthorized"
+}
+```
+### Server Error (500 Internal Server Error)
+```json
+{
+  "message": "Internal server error"
+}
+```
