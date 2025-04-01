@@ -86,7 +86,7 @@ services:
       - "6380:6379"
     environment:
       REDIS_PASSWORD: password
-    command: ["redis-server", "--requirepass", "@Bdallh1722"]
+    command: ["redis-server", "--requirepass", ""]
     volumes:
       - redis-data:/data
 
